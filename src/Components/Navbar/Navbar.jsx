@@ -4,12 +4,12 @@ import adclogo from '../../assets/adclogo.png'
 const Navbar = () => {
   return (
    <nav className='container'>
-    <img src={adclogo} className='logo' />
+    
     <ul>
-        <li>
-            Home
+        <li><a href="#home">Home</a>
+           
         </li>
-        <li>Program</li>
+        <li ><a href="#upcomming-programs"> Program</a></li>
         <li>About us</li>
         <li>Campus</li>
         <li>Testimonials</li>

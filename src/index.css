@@ -6,7 +6,7 @@
   font-family: "Outfit", sans-serif;
 }
 body{
-  background: #F5F5F5;
+  background: #060606;
 
 }
 a{
@@ -28,4 +28,7 @@ a{
   cursor: pointer;
   border: 0;
   outline: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
