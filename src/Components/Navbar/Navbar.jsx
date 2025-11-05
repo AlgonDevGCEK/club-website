@@ -10,7 +10,7 @@ const Navbar = () => {
            
         </li>
         <li ><a href="#upcomming-programs"> Program</a></li>
-        <li>About us</li>
+        <li ><a href="#about">About us</a></li>
         <li>Campus</li>
         <li>Testimonials</li>
         
