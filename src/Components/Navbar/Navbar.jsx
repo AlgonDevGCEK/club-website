@@ -19,9 +19,14 @@ const Navbar = () => {
 
   return (
     <nav ref = {navRef}>
-      {/* Hamburger button (only visible on mobile) */}
-      <button className="hamburger" onClick={() => setIsOpen(!isOpen)}>
-        ☰
+      {/* Hamburger button */}
+      <button
+        className={`hamburger ${isOpen ? 'open' : ''}`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
       </button>
 
       {/* Navigation links */}
