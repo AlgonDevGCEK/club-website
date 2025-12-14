@@ -30,9 +30,9 @@ nav ul li {
   background: none;
   border: none;
   cursor: pointer;
-  color: #fff;       /* keep text color if needed */
-  font-size: 28px;   /* optional if you still want ☰ fallback */
-  z-index: 200;      /* keep above menu */
+  color: #fff;       
+  font-size: 28px;   
+  z-index: 200;      
 }
 
 .hamburger span {
@@ -61,8 +61,8 @@ nav ul li {
   .hamburger {
     display: flex;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 20px;
+    top: 20px;
   }
 
   .nav-links {
@@ -70,9 +70,9 @@ nav ul li {
     flex-direction: column;
     position: absolute;
     top: 48px;
-    right: 10px;
-    width: 50%;
-    background: rgba(0, 11, 15, 0.752);
+    right: 0px;
+    width: 100%;
+    background: rgba(2, 6, 8, 0.871);
     padding: 1rem;
     text-align: center;
     opacity: 0;
@@ -92,9 +92,9 @@ nav ul li {
   }
 }
 
-/* Hover effects for nav links */
+
 nav ul li a {
-  color: #fff; /* keep your font color */
+  color: #fff; 
   text-decoration: none;
   position: relative;
   transition: color 0.3s ease;
@@ -108,14 +108,14 @@ nav ul li a::after {
   bottom: -4px;
   width: 0%;
   height: 2px;
-  background: #4b90c4; /* accent color */
+  background: #4b90c4; 
   transition: width 0.3s ease;
 }
 
 nav ul li a:hover {
-  color: #189ee1; /* text glow color */
+  color: #189ee1; 
 }
 
 nav ul li a:hover::after {
-  width: 100%; /* underline slides in */
+  width: 100%; 
 }
