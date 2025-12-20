@@ -6,8 +6,12 @@
   font-family: "Outfit", sans-serif;
 }
 body{
-  background: #0a0a0a;
+  background: #010205;
+  color: #ffffff;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
 }
+
 /* .nav-hero{
   position: relative;
    background: linear-gradient(rgba(7, 3, 34, 0.7), rgba(15, 5, 107, 0.7)),
@@ -19,6 +23,11 @@ a{
   line-height: 1;
   cursor: pointer;
 }
+.page-content {
+  padding-top: 80px; /* same as navbar height */
+  
+}
+
 .container{
   padding-left: 10%;
   padding-right: 10%;

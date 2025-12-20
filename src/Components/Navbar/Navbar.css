@@ -9,7 +9,7 @@ nav {
   align-items: center;
   justify-content: flex-end;
   z-index: 100;
-  background: rgba(75, 144, 196, 0) !important;
+  background: rgba(75, 144, 196, 0) ;
   backdrop-filter: blur(10px);
 }
 

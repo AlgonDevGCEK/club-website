@@ -1,0 +1,6 @@
+.about-page {
+  padding-top: 100px;   /* navbar height */
+  min-height: 100vh;
+
+  background: transparent; /* IMPORTANT */
+}
