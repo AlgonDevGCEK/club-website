@@ -24,8 +24,8 @@ const Login = () => {
   return (
     <div className="login-wrapper">
       <div className="login-card">
-        <h2 className="login-title">Welcome Back 👋</h2>
-        <p className="login-subtitle">Sign in to continue to ALGON DC</p>
+        <h2 className="login-title">Welcome Back ! </h2>
+        <p className="login-subtitle">Log in to your member account and stay connected</p>
 
         {errorMessage && <p className="error">{errorMessage}</p>}
 
@@ -54,8 +54,8 @@ const Login = () => {
         </form>
 
         <div className="login-footer">
-          <span>Don’t have an account?</span>
-          <a href="/signup">Sign Up</a>
+          <span>Not a member yet?</span>
+          <a href="/signup"> Join us today</a>
         </div>
       </div>
     </div>
