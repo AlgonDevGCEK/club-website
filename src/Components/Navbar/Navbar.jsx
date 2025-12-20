@@ -1,5 +1,6 @@
 import React, { useState , useEffect, useRef} from 'react';
 import './Navbar.css';
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -31,14 +32,32 @@ const Navbar = () => {
       </button>
 
       {/* Navigation links */}
-      <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
-        <li><a href="#home" onClick={() => setIsOpen(false)}>Home</a></li>
-        <li><a href="#upcomming-programs" onClick={() => setIsOpen(false)}>Programs</a></li>
-        <li><a href="#about" onClick={() => setIsOpen(false)}>About us</a></li>
-        <li><a href="#campus" onClick={() => setIsOpen(false)}>Gallery</a></li>
-        <li><a href="#testimonials" onClick={() => setIsOpen(false)}>Contact us</a></li>
-        <li><button className="btn">Login</button></li>
-      </ul>
+     <ul className={`nav-links ${isOpen ? 'open' : ''}`}>
+  <li>
+    <NavLink to="/" end>Home</NavLink>
+  </li>
+
+  <li>
+    <NavLink to="/upcoming-programs">Programs</NavLink>
+  </li>
+
+  <li>
+    <NavLink to="/about">About Us</NavLink>
+  </li>
+
+  <li>
+    <NavLink to="/gallery">Gallery</NavLink>
+  </li>
+
+  <li>
+    <NavLink to="/contact">Contact Us</NavLink>
+  </li>
+
+  <li>
+    <button className="btn">Login</button>
+  </li>
+</ul>
+
     </nav>
     <div
         className={`menu-overlay ${isOpen ? 'active' : ''}`}
