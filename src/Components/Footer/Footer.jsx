@@ -9,7 +9,7 @@ const Footer = () => {
       <div className="footer-top">
         <span>Get connected with us on social networks:</span>
         <div className="social-icons">
-           <a href="https://instagram.com/algondc" target="_blank" rel="noopener noreferrer">
+           <a href="https://www.instagram.com/algondc_gcek/" target="_blank" rel="noopener noreferrer">
             <FaInstagram />
            </a>
            <a href="https://github.com/AlgonDevGCEK" target="_blank" rel="noopener noreferrer">
