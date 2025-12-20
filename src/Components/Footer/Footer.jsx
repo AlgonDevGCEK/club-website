@@ -1,5 +1,6 @@
 import React from "react";
 import "./Footer.css";
+import { FaInstagram, FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -8,10 +9,15 @@ const Footer = () => {
       <div className="footer-top">
         <span>Get connected with us on social networks:</span>
         <div className="social-icons">
-          <a href="#">Facebook</a>
-          <a href="#">Twitter</a>
-          <a href="#">GitHub</a>
-          <a href="#">LinkedIn</a>
+           <a href="https://instagram.com/algondc" target="_blank" rel="noopener noreferrer">
+            <FaInstagram />
+           </a>
+           <a href="https://github.com/algondc" target="_blank" rel="noopener noreferrer">
+            <FaGithub />
+          </a>
+          <a href="https://linkedin.com/company/algondc" target="_blank" rel="noopener noreferrer">
+            <FaLinkedinIn />
+          </a>
         </div>
       </div>
 
@@ -47,7 +53,11 @@ const Footer = () => {
 
         <div className="footer-column">
           <h4>Contact</h4>
-          <p>📍 GCEK, Kerala</p>
+          <p>📍 Government College of Engineering Kannur</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mangattuparamba</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parassinikadavu P.O.</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kannur, Kerala</p>
+            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;670563</p>
           <p>✉️ algondc@example.com</p>
           <p>📞 +91 98765 43210</p>
         </div>
