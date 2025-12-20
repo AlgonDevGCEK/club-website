@@ -18,8 +18,8 @@ const Hero = () => {
 
     </p>
 
-    <button className="btn">
-      Join us <img src={dark_arrow} alt="" />
+    <button className="btn hero-btn">
+        Join us <img src={dark_arrow} alt="" />
     </button>
   </div>
 </div>
