@@ -58,8 +58,8 @@ const Footer = () => {
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parassinikadavu P.O.</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kannur, Kerala</p>
             <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;670563</p>
-          <p>✉️ algondc@example.com</p>
-          <p>📞 +91 98765 43210</p>
+          <br></br>
+          <p>✉️&nbsp;&nbsp;adcgcek25@gmail.com</p><br></br>
         </div>
       </div>
 
