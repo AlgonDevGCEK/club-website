@@ -10,7 +10,7 @@ const Hero = () => {
     <h1 className="logo-title">ALGON DC</h1>
     <h1 className="logo-subtitle">GCEK</h1>
 
-    <h2>Our Vision</h2>
+    <h2>Build. Collaborate. Innovate.</h2>
     <p>
       To create an ecosystem where students can collaborate across disciplines,
       gain hands-on experience, and grow into industry-ready professionals
