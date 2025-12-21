@@ -26,7 +26,7 @@
 
 .login-title {
   color: #d4dde4;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 
 .login-subtitle {
@@ -90,7 +90,7 @@
 @media (max-width: 600px) {
   .login-card {
     width: 90%;
-    padding: 50px 20px;
+    padding: 60px 20px;
   }
 
   .login-btn {
