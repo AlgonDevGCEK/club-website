@@ -3,7 +3,12 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.9));
+  background: linear-gradient(
+  180deg,
+  #111827 0%,
+  #1e293b 50%,  
+  #020617 100%
+);
   font-family: 'Poppins', sans-serif;
 }
 
