@@ -1,7 +1,7 @@
 import React from 'react'
 import Navbar from './Components/Navbar/Navbar'
 import Hero from './Components/Hero/Hero'
-import AboutUs from './Components/AboutUs/AboutUs'
+import AboutUs from './Components/AboutUs/Aboutus'
 import UpcomingPrograms from './Components/Programs/UpcommingPrograms'
 import './index.css'
 import AboutPage from "./pages/AboutPage";
