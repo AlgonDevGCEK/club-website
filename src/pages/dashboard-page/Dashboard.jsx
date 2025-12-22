@@ -197,21 +197,20 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* --- ID CARD MODAL --- */}
       {showIdModal && (
         <div className="modal-overlay" onClick={() => setShowIdModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-modal-btn" onClick={() => setShowIdModal(false)}><X size={24}/></button>
             
             <div className="digital-id-card-light" ref={idCardRef}>
-               {/* 1. UPDATED HEADER TITLE */}
+               {/* 1. Header Title */}
                <div className="id-header-light">ALGON DC ID</div>
                
                <div className="id-body-light">
-                 {/* 2. CLUB LOGO (Make sure club-logo.png is in public folder) */}
-                 <img src={clubLogo} alt="Club Logo" className="club-logo-img"onError={(e) => e.target.style.display='none'} />
+                 {/* 2. Club Logo */}
+                 <img src={clubLogo} alt="Club Logo" className="club-logo-img" onError={(e) => e.target.style.display='none'} />
 
-                 {/* USER PHOTO */}
+                 {/* User Photo */}
                  <div className="id-photo-frame">
                    {member.profile_pic ? (
                      <img src={member.profile_pic} alt="Profile" crossOrigin="anonymous" />
@@ -221,9 +220,13 @@ const Dashboard = () => {
                  </div>
                  
                  <h2>{member.name}</h2>
-                 <p className="role">Student Member</p>
+
+                 {/* 👇 3. UPDATED POSITION LOGIC HERE 👇 */}
+                 <p className={`role ${member.position === 'Execom Member' ? 'role-special' : ''}`}>
+                   {member.position || "Student Member"}
+                 </p>
                  
-                 {/* 3. ADDED DETAILS (College & Validity) */}
+                 {/* 4. Details (College & Validity) */}
                  <div className="id-meta">
                    <p><strong>ID:</strong> {member.user_id.slice(0, 8).toUpperCase()}</p>
                    <p><strong>Dept:</strong> {member.department} &bull; <strong>Year:</strong> {member.year}</p>
