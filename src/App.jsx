@@ -1,21 +1,27 @@
 import React from 'react';
+
+
+// Components
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
 import UpcomingPrograms from './Components/Programs/UpcommingPrograms';
-import './index.css';
-import AboutPage from "./pages/AboutPage";
 import Footer from "./Components/Footer/Footer";
+import Gallery from './Components/gallery/Gallery';
+import AdminUpload from './Components/gallery/AdminUpload';
+
+// Pages
+import AboutPage from "./pages/AboutPage";
+import Contact from './pages/Contact/Contact';
 import Login from "./pages/login-page/Login";
 import Signup from "./pages/signup-page/Signup";
-import Contact from './pages/Contact/Contact';
 import ForgotPassword from "./pages/password/ForgotPassword";
 import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 
 // Gallery Components
-import AdminUpload from './Components/gallery/AdminUpload'; 
-import Gallery from './Components/gallery/Gallery';
+ 
+
 
 import {
   BrowserRouter as Router,
@@ -23,6 +29,7 @@ import {
   Route
 } from "react-router-dom";
 
+import './index.css';
 
 const App = () => {
   return (
@@ -47,9 +54,10 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           
-          {/* Protected/Admin Routes */}
+          {/* Protected / App Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-upload" element={<AdminUpload />} />
+          <Route path="/verify/:userId" element={<VerifyUser />} />
         </Routes>
       </div>
 

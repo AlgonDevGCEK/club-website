@@ -1,11 +1,29 @@
 // src/components/AdminUpload.jsx
 import { useState } from "react";
 import { supabase } from "../../supabaseClient";
+import "./AdminUpload.css";
 
 export default function AdminUpload() {
   const [file, setFile] = useState(null);
   const [quote, setQuote] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [preview, setPreview] = useState(null);
+
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+    
+    // Create preview
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result);
+      };
+      reader.readAsDataURL(selectedFile);
+    } else {
+      setPreview(null);
+    }
+  };
 
   const handleUpload = async (e) => {
     e.preventDefault();
@@ -46,38 +64,91 @@ export default function AdminUpload() {
       alert("Success! Image added to gallery.");
       setQuote("");
       setFile(null);
+      setPreview(null);
     }
     setUploading(false);
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "500px", margin: "0 auto", color: "white" }}>
-      <h2>Admin Upload Panel</h2>
-      <form onSubmit={handleUpload} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-        
-        <input 
-          type="file" 
-          accept="image/*" 
-          onChange={(e) => setFile(e.target.files[0])} 
-          style={{ padding: "10px", background: "#333", border: "1px solid #555" }}
-        />
-        
-        <input 
-          type="text" 
-          placeholder="Enter a caption/quote..." 
-          value={quote}
-          onChange={(e) => setQuote(e.target.value)}
-          style={{ padding: "10px", background: "#333", border: "1px solid #555", color: "white" }}
-        />
+    <div className="admin-upload-section">
+      <div className="admin-upload-container animate-fade-in">
+        <div className="admin-header animate-slide-down">
+          <h2>Admin Upload Panel</h2>
+          <p>Add new images to the live gallery</p>
+        </div>
 
-        <button 
-          type="submit" 
-          disabled={uploading}
-          style={{ padding: "10px", background: "#a855f7", border: "none", color: "white", cursor: "pointer" }}
-        >
-          {uploading ? "Uploading..." : "Upload & Publish"}
-        </button>
-      </form>
+        <form onSubmit={handleUpload} className="upload-form">
+          
+          {/* File Upload Area */}
+          <div className="form-group animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <label className="file-upload-label">
+              <input 
+                type="file" 
+                accept="image/*" 
+                onChange={handleFileChange}
+                className="file-input"
+              />
+              <div className="file-upload-area">
+                {preview ? (
+                  <div className="preview-container">
+                    <img src={preview} alt="Preview" className="preview-image" />
+                    <div className="preview-overlay">
+                      <span>Click to change image</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="upload-placeholder">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                      <polyline points="17 8 12 3 7 8"></polyline>
+                      <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Click to upload image</span>
+                    <span className="upload-hint">PNG, JPG, GIF up to 10MB</span>
+                  </div>
+                )}
+              </div>
+            </label>
+          </div>
+
+          {/* Quote Input */}
+          <div className="form-group animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <label htmlFor="quote">Caption / Quote</label>
+            <input 
+              type="text" 
+              id="quote"
+              placeholder="Enter a caption or quote for this image..." 
+              value={quote}
+              onChange={(e) => setQuote(e.target.value)}
+              className="quote-input"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button 
+            type="submit" 
+            disabled={uploading || !file}
+            className={`submit-button animate-slide-up ${uploading ? 'uploading' : ''}`}
+            style={{ animationDelay: '0.4s' }}
+          >
+            {uploading ? (
+              <>
+                <span className="spinner"></span>
+                Uploading...
+              </>
+            ) : (
+              <>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Upload & Publish
+              </>
+            )}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
