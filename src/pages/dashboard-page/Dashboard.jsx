@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../supabaseClient";
 import QRCode from "react-qr-code";
 import html2canvas from "html2canvas";
-import { Edit2, Check, X, Download, Calendar, Bell, Camera, LogOut } from "lucide-react";
+import { Edit2, Check, X, Download, Calendar, Camera, LogOut ,ShieldCheck} from "lucide-react";
 import "./Dashboard.css";
 import clubLogo from "../../assets/club-logo.jpeg";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -152,6 +153,14 @@ const Dashboard = () => {
       <div className="dashboard-grid">
         {/* PROFILE DETAILS */}
         <div className="info-card">
+          {member?.role === 'admin' && (
+            <div className="admin-access-section">
+              <Link to="/admin" className="admin-access-btn">
+                <ShieldCheck size={20} />
+                <span>Open Admin Command Center</span>
+              </Link>
+            </div>
+          )}
           <h3>Personal Details</h3>
           <div className="detail-row locked"><label>Email:</label><div className="value">{member.email}</div></div>
           <div className="detail-row locked"><label>Name:</label><div className="value">{member.name}</div></div>

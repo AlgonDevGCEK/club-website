@@ -151,6 +151,32 @@
 .id-meta p { margin: 2px 0; }
 .validity { margin-top: 5px !important; font-weight: 600; }
 
+.admin-access-section {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-access-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #7c3aed, #d946ef); 
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+  transition: all 0.3s ease;
+}
+
+.admin-access-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
+}
+
 .qr-box { margin-top: 5px; padding: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; }
 
 /* --- MODAL (POPUP) --- */
