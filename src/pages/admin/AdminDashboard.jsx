@@ -48,9 +48,6 @@ const AdminDashboard = () => {
             <p>Algon Admin Command Center</p>
           </div>
         </div>
-        <button onClick={handleLogout} className="logout-btn">
-          <LogOut size={18} /> Logout
-        </button>
       </header>
 
       {/* --- DASHBOARD GRID --- */}

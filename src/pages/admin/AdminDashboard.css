@@ -53,25 +53,6 @@
   font-size: 0.85rem;
 }
 
-.logout-btn {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: transparent;
-  border: 1px solid #334155;
-  color: #94a3b8;
-  padding: 10px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.logout-btn:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgb(221, 66, 66);
-  border-color: rgb(228, 36, 36);
-}
-
 /* --- GRID LAYOUT --- */
 .hub-grid {
   display: grid;
@@ -123,6 +104,7 @@
   color: #94a3b8;
   font-size: 0.9rem;
   line-height: 1.5;
+  padding-top: 8px;
 }
 
 .card-arrow {
@@ -175,17 +157,9 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
   }
-
-  /* 3. Make Logout button full width for easy tapping */
-  .logout-hub-btn {
-    width: 100%;
-    justify-content: center;
-    padding: 12px;
-    background: rgba(30, 41, 59, 0.5); 
-  }
-
+ 
   /* 4. Force cards into a single column */
   .hub-grid {
     grid-template-columns: 1fr; 
