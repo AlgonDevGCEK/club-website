@@ -166,14 +166,15 @@
 @media (max-width: 768px) {
   /* 1. Reduce container padding */
   .admin-hub-container {
-    padding: 20px 15px;
+    padding: 30px 15px;
+    padding-bottom: 120px;
   }
 
   /* 2. Stack the Header (Welcome Top, Logout Bottom) */
   .hub-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 30px;
     margin-bottom: 30px;
   }
 
@@ -188,7 +189,7 @@
   /* 4. Force cards into a single column */
   .hub-grid {
     grid-template-columns: 1fr; 
-    gap: 20px;
+    gap: 60px;
   }
 
   /* 5. Adjust Font Sizes */
