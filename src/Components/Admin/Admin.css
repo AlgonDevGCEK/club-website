@@ -1,0 +1,169 @@
+/* --- CONTAINER --- */
+.admin-section {
+  padding: 30px;
+  background: #0f172a; /* Dark Navy Background */
+  min-height: 100vh;
+  color: #e2e8f0;
+  font-family: 'Poppins', sans-serif;
+  padding-top: 100px;
+}
+
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+/* Avatar Image Styling */
+.table-avatar-img {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #334155;
+}
+
+/* Details Stack (For vertically stacking text in cells) */
+.details-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.icon-row {
+  display: flex; align-items: center; gap: 6px; 
+  font-size: 12px; color: #94a3b8;
+}
+
+/* Status Dot */
+.status-dot { font-size: 12px; font-weight: 600; text-transform: capitalize; }
+.status-dot.approved { color: #34d399; }
+.status-dot.pending { color: #facc15; }
+.status-dot.rejected { color: #ef4444; }
+
+/* Edit Inputs in Table */
+.edit-input {
+  background: #0f172a;
+  border: 1px solid #3b82f6;
+  color: white;
+  padding: 4px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.copy-icon { cursor: pointer; color: #64748b; }
+.copy-icon:hover { color: white; }
+
+.tx-row { display: flex; align-items: center; gap: 6px; }
+.admin-header h2 { margin: 0; font-size: 24px; color: white; }
+.stats-badge {
+  background: #3b82f6; color: white;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 14px; font-weight: 600;
+}
+
+/* --- TOOLBAR --- */
+.admin-toolbar {
+  display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap;
+}
+.search-box {
+  flex: 1; min-width: 280px; position: relative;
+}
+.search-box input {
+  width: 100%; padding: 12px 12px 12px 40px;
+  background: #1e293b; border: 1px solid #334155;
+  border-radius: 8px; color: white; outline: none;
+}
+.search-box input:focus { border-color: #3b82f6; }
+.search-icon { position: absolute; left: 12px; top: 12px; color: #94a3b8; }
+
+.filter-tabs { display: flex; background: #1e293b; padding: 4px; border-radius: 8px; }
+.filter-tabs button {
+  background: transparent; border: none; color: #94a3b8;
+  padding: 8px 16px; cursor: pointer; border-radius: 6px; font-weight: 500;
+}
+.filter-tabs button.active { background: #3b82f6; color: white; }
+
+/* --- TABLE --- */
+.table-container {
+  overflow-x: auto; background: #1e293b;
+  border-radius: 12px; border: 1px solid #334155;
+}
+.admin-table { width: 100%; border-collapse: collapse; min-width: 900px; }
+.admin-table th {
+  background: #0f172a; text-align: left; padding: 16px;
+  color: #94a3b8; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.admin-table td {
+  padding: 16px; border-bottom: 1px solid #334155; vertical-align: middle;
+}
+.admin-table tr:hover { background: #26334d; }
+.row-pending { background: rgba(234, 179, 8, 0.05); }
+
+/* --- CELL STYLES --- */
+.member-cell { display: flex; align-items: center; gap: 12px; }
+.table-avatar {
+  width: 38px; height: 38px; background: #475569;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: bold; color: white;
+}
+.sub-text { display: block; font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+.tx-cell { display: flex; align-items: center; gap: 8px; }
+.tx-code {
+  background: #0f172a; padding: 4px 8px; border-radius: 4px;
+  font-family: monospace; color: #60a5fa; border: 1px solid #334155; font-size: 13px;
+}
+.icon-btn { background: none; border: none; color: #64748b; cursor: pointer; padding: 4px; }
+.icon-btn:hover { color: white; }
+
+/* --- BADGES --- */
+.status-badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; text-transform: capitalize; }
+.status-badge.pending { background: rgba(234, 179, 8, 0.2); color: #facc15; }
+.status-badge.approved { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+.role-badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; white-space: nowrap; }
+.role-badge.member { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; border: 1px solid rgba(148, 163, 184, 0.3); }
+.role-badge.execom { background: rgba(124, 58, 237, 0.2); color: #d8b4fe; border: 1px solid rgba(124, 58, 237, 0.3); }
+
+/* --- EDIT INPUTS --- */
+.edit-input {
+  background: #0f172a; border: 1px solid #3b82f6;
+  color: white; padding: 6px 8px; border-radius: 6px;
+  font-size: 13px; outline: none; width: 100%;
+}
+.date-display { display: flex; align-items: center; gap: 6px; color: #cbd5e1; font-size: 13px; }
+.icon-muted { color: #64748b; }
+.text-muted { color: #475569; font-style: italic; }
+
+/* --- ACTION BUTTONS --- */
+.action-row { display: flex; gap: 8px; }
+.btn-verify {
+  background: #10b981; color: white; border: none;
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+}
+.btn-verify:hover { background: #059669; }
+
+.btn-reject {
+  background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444;
+  padding: 6px; border-radius: 6px; cursor: pointer; display: flex; align-items: center;
+}
+.btn-reject:hover { background: #ef4444; color: white; }
+
+.btn-edit, .btn-save {
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+  cursor: pointer; display: flex; align-items: center; gap: 5px;
+}
+.btn-edit { background: rgba(255,255,255,0.05); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+.btn-edit:hover { background: rgba(255,255,255,0.1); color: white; }
+
+.btn-save { background: #3b82f6; color: white; border: none; }
+.btn-save:hover { background: #2563eb; }
+
+/* Mobile Helper */
+@media (max-width: 768px) {
+  .admin-toolbar { flex-direction: column; }
+  .search-box { width: 100%; }
+}
