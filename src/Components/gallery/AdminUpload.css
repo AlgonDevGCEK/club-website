@@ -224,8 +224,9 @@
   opacity: 1;
 }
 
-/* Quote Input */
-.quote-input {
+/* Quote Input & Event Type Input */
+.quote-input,
+.event-type-input {
   width: 100%;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(99, 102, 241, 0.2);
@@ -238,16 +239,25 @@
   box-sizing: border-box;
 }
 
-.quote-input::placeholder {
+.quote-input::placeholder,
+.event-type-input::placeholder {
   color: rgba(148, 163, 184, 0.5);
 }
 
-.quote-input:focus {
+.quote-input:focus,
+.event-type-input:focus {
   outline: none;
   border-color: #8b5cf6;
   background: rgba(15, 23, 42, 0.8);
   box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
   transform: translateY(-2px);
+}
+
+/* Event Type Select Styling */
+.event-type-input option {
+  background: #1e293b;
+  color: #e2e8f0;
+  padding: 10px;
 }
 
 /* Submit Button */

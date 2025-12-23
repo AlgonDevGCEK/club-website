@@ -6,6 +6,7 @@ import "./AdminUpload.css";
 export default function AdminUpload() {
   const [file, setFile] = useState(null);
   const [quote, setQuote] = useState("");
+  const [eventType, setEventType] = useState("");
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState(null);
 
@@ -32,7 +33,6 @@ export default function AdminUpload() {
     setUploading(true);
     const fileName = `${Date.now()}-${file.name}`;
 
-    // 1. Upload File to Storage Bucket
     const { error: uploadError } = await supabase.storage
       .from('gallery')
       .upload(`public/${fileName}`, file);
@@ -43,26 +43,24 @@ export default function AdminUpload() {
       return;
     }
 
-    // 2. Get the Public URL
     const { data: urlData } = supabase.storage
       .from('gallery')
       .getPublicUrl(`public/${fileName}`);
 
-    // 3. Save Record to Database
     const { error: dbError } = await supabase
       .from('gallery_events')
-      .insert([
-        { 
-          image_url: urlData.publicUrl, 
-          quote: quote 
-        }
-      ]);
+      .insert([{ 
+        image_url: urlData.publicUrl, 
+        quote: quote,
+        event_type: eventType 
+      }]);
 
     if (dbError) {
       alert("Database error: " + dbError.message);
     } else {
       alert("Success! Image added to gallery.");
       setQuote("");
+      setEventType("");
       setFile(null);
       setPreview(null);
     }
@@ -79,7 +77,6 @@ export default function AdminUpload() {
 
         <form onSubmit={handleUpload} className="upload-form">
           
-          {/* File Upload Area */}
           <div className="form-group animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <label className="file-upload-label">
               <input 
@@ -111,8 +108,29 @@ export default function AdminUpload() {
             </label>
           </div>
 
-          {/* Quote Input */}
           <div className="form-group animate-slide-up" style={{ animationDelay: '0.3s' }}>
+            <label htmlFor="event-type">Event Type</label>
+            <select
+              id="event-type"
+              value={eventType}
+              onChange={(e) => setEventType(e.target.value)}
+              className="event-type-input"
+              required
+            >
+              <option value="">Select event type...</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Hackathon">Hackathon</option>
+              <option value="Seminar">Seminar</option>
+              <option value="Conference">Conference</option>
+              <option value="Meetup">Meetup</option>
+              <option value="Competition">Competition</option>
+              <option value="Training">Training</option>
+              <option value="Social">Social Event</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div className="form-group animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <label htmlFor="quote">Caption / Quote</label>
             <input 
               type="text" 
@@ -124,12 +142,11 @@ export default function AdminUpload() {
             />
           </div>
 
-          {/* Submit Button */}
           <button 
             type="submit" 
-            disabled={uploading || !file}
+            disabled={uploading || !file || !eventType}
             className={`submit-button animate-slide-up ${uploading ? 'uploading' : ''}`}
-            style={{ animationDelay: '0.4s' }}
+            style={{ animationDelay: '0.5s' }}
           >
             {uploading ? (
               <>

@@ -4,7 +4,7 @@ import React from 'react';
 // Components
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
-import UpcomingPrograms from './Components/Programs/UpcommingPrograms';
+
 import Footer from "./Components/Footer/Footer";
 import Gallery from './Components/gallery/Gallery';
 import AdminUpload from './Components/gallery/AdminUpload';
@@ -21,7 +21,12 @@ import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 
 // Gallery Components
  
+// Inside App.js
 
+import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
+import EventRegistration from './Components/Programs/EventRegistration'; 
+
+// Inside <Routes>
 
 import {
   BrowserRouter as Router,
@@ -58,6 +63,9 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-upload" element={<AdminUpload />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
+          <Route path="/upcoming-programs" element={<UpcomingPrograms />} />
+                 <Route path="/register/:id" element={<EventRegistration />} />  
+
         </Routes>
       </div>
 
