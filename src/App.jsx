@@ -8,6 +8,7 @@ import UpcomingPrograms from './Components/Programs/UpcommingPrograms';
 import Footer from "./Components/Footer/Footer";
 import Gallery from './Components/gallery/Gallery';
 import AdminUpload from './Components/gallery/AdminUpload';
+import AdminMemberManager from './Components/Admin/AdminMemberManager';
 
 // Pages
 import AboutPage from "./pages/AboutPage";
@@ -18,8 +19,6 @@ import ForgotPassword from "./pages/password/ForgotPassword";
 import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
-
-
 import AdminDashboard from "./pages/admin/AdminDashboard";
 
 import './index.css';
@@ -51,6 +50,7 @@ const App = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin-member-manager" element={<AdminMemberManager />} />
         </Routes>
       </div>
 
