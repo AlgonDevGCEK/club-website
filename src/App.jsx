@@ -1,14 +1,20 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from "react-router-dom";
 
 // Components
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
-
 import Footer from "./Components/Footer/Footer";
 import Gallery from './Components/gallery/Gallery';
 import AdminUpload from './Components/gallery/AdminUpload';
-import AdminMemberManager from './Components/Admin/AdminMemberManager';
+import AdminMemberManager from './Components/Admin/AdminMemberManager'; // From Snippet 1
+import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
+import EventRegistration from './Components/Programs/EventRegistration'; // From Snippet 1
 
 // Pages
 import AboutPage from "./pages/AboutPage";
@@ -20,22 +26,30 @@ import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
-import EventRegistration from './Components/Programs/EventRegistration';
-
-// Inside <Routes>
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
 
 import './index.css';
+
+/**
+ * Utility Component: Resets scroll to top on every route change
+ * (From Snippet 2)
+ */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Moves the window back to the top-left corner
+    window.scrollTo(0, 0);
+  }, [pathname]); // Fires every time the URL path changes
+
+  return null;
+};
 
 const App = () => {
   return (
     <Router>
+      {/* This must be inside <Router> to work */}
+      <ScrollToTop /> 
+
       <div className='nav-hero'>
         <Navbar />
       </div>
@@ -48,8 +62,7 @@ const App = () => {
           <Route path="/upcoming-programs" element={<UpcomingPrograms />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/verify/:userId" element={<VerifyUser />} />
-
+          
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -61,6 +74,8 @@ const App = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          
+          {/* Extra Routes from Snippet 1 */}
           <Route path="/admin-member-manager" element={<AdminMemberManager />} />
           <Route path="/register/:id" element={<EventRegistration />} />
         </Routes>
