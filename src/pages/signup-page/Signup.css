@@ -83,28 +83,68 @@
   margin-bottom: 15px;
 }
 
-/* --- CHECKBOX --- */
-.checkbox-group {
+/* --- MODERN TOGGLE SWITCH --- */
+.toggle-group {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: space-between;
+  margin: 20px 0;
+  padding: 12px 15px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.toggle-label {
   font-size: 13px;
   color: #cbd5e1;
-}
-
-.checkbox-group label {
-  display: flex;
-  align-items: center;
   cursor: pointer;
-  user-select: none;
+  text-align: center;
 }
 
-.checkbox-group input[type="checkbox"] {
-  width: 16px;
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider track */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #334155;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+/* The sliding circle */
+.slider:before {
+  position: absolute;
+  content: "";
   height: 16px;
-  margin-right: 10px;
-  accent-color: #3b82f6; /* Makes the checkbox blue */
-  cursor: pointer;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider {
+  background-color: #3b82f6; /* Blue when active */
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
 }
 
 /* --- BUTTONS --- */

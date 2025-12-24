@@ -185,12 +185,18 @@ const Signup = () => {
             <div className="input-group"><input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required /></div>
             <div className="input-group"><input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required /></div>
 
-            <div className="input-group checkbox-group">
-              <label>
-                <input type="checkbox" name="college" checked={formData.college} onChange={handleChange} /> 
-                I am a GCEK student
-              </label>
-            </div>
+            <div className="toggle-group">
+                <span className="toggle-label">I belong to Government College of Engineering Kannur</span>
+                <label className="switch">
+              <input 
+                  type="checkbox" 
+                  name="college" 
+                  checked={formData.college} 
+                    onChange={handleChange} 
+                />
+              <span className="slider"></span>
+         </label>
+        </div>
 
             <button type="submit" className="signup-btn">Next <ArrowRight size={18} style={{marginLeft:'8px'}}/></button>
             <div className="signup-footer"><span>Already a member?</span><a href="/login"> Log in</a></div>
