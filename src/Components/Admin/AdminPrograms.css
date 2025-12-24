@@ -1,0 +1,131 @@
+/* --- CONTAINER --- */
+.admin-console {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 25px;
+  color: #e2e8f0;
+  width: 100%;
+  animation: fadeIn 0.3s ease;
+  padding-top: 150px;
+}
+
+/* --- HEADER --- */
+.console-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+}
+
+.console-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: white;
+}
+
+.highlight-text { color: #f5f6f8; }
+
+/* --- BUTTONS --- */
+.create-btn {
+  background: #10b981; color: white;
+  border: none; padding: 10px 16px; border-radius: 8px;
+  display: flex; gap: 8px; align-items: center; cursor: pointer;
+  font-weight: 600;
+}
+.create-btn:hover { background: #059669; }
+
+.back-btn {
+  background: transparent; border: 1px solid #64748b; color: #cbd5e1;
+  padding: 8px 14px; border-radius: 8px; cursor: pointer;
+  display: flex; gap: 6px; align-items: center;
+}
+.back-btn:hover { border-color: white; color: white; }
+
+.export-btn {
+  border: none; padding: 8px 14px; border-radius: 6px;
+  display: flex; gap: 6px; align-items: center; cursor: pointer;
+  font-weight: 600; color: white; margin-left: 10px;
+}
+.excel { background: #217346; }
+.pdf { background: #b30b00; }
+
+.header-actions { display: flex; }
+
+/* --- TABLE STYLES --- */
+.table-container { overflow-x: auto; }
+
+.admin-table {
+  width: 100%; border-collapse: collapse;
+}
+
+.admin-table th {
+  text-align: left; padding: 12px;
+  color: #94a3b8; font-size: 0.85rem; text-transform: uppercase;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.admin-table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: middle;
+}
+
+.main-col strong { color: white; font-size: 1rem; }
+.sub-text { font-size: 0.8rem; color: #64748b; }
+
+.actions-col { display: flex; gap: 10px; }
+.icon-btn {
+  background: transparent; border: none; padding: 8px;
+  border-radius: 6px; cursor: pointer; transition: background 0.2s;
+}
+.icon-btn.blue { color: #60a5fa; background: rgba(59, 130, 246, 0.1); }
+.icon-btn.yellow { color: #facc15; background: rgba(234, 179, 8, 0.1); }
+.icon-btn.red { color: #f87171; background: rgba(239, 68, 68, 0.1); }
+
+.icon-btn:hover { transform: scale(1.1); }
+
+/* --- BADGES --- */
+.badge-member { background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.badge-guest { background: rgba(148, 163, 184, 0.2); color: #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+
+/* --- FORMS --- */
+.admin-form { display: flex; flex-direction: column; gap: 15px; }
+.form-row { display: flex; gap: 20px; }
+.form-group { flex: 1; display: flex; flex-direction: column; gap: 6px; }
+
+.form-group label { color: #cbd5e1; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px; border-radius: 8px; color: white; outline: none;
+}
+.form-group input:focus { border-color: #3b82f6; }
+
+/* File Input Custom Style */
+.file-input-wrapper {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  background: rgba(15, 23, 42, 0.8); border: 1px dashed rgba(255,255,255,0.2);
+  padding: 15px; border-radius: 8px; cursor: pointer;
+}
+.file-input-wrapper input {
+  position: absolute; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+}
+.img-preview { font-size: 0.85rem; margin-top: 5px; }
+.img-preview a { color: #60a5fa; }
+
+.save-btn {
+  margin-top: 10px; background: #3b82f6; color: white;
+  border: none; padding: 12px; border-radius: 8px; font-size: 1rem; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.save-btn:hover { background: #2563eb; }
+.save-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .form-row { flex-direction: column; gap: 15px; }
+  .header-actions { flex-direction: column; gap: 5px; margin-top: 10px; }
+  .export-btn { width: 100%; margin: 0; justify-content: center; }
+}
