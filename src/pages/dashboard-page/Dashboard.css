@@ -190,7 +190,23 @@
 .id-photo-frame img { width: 100%; height: 100%; object-fit: cover; }
 .initials { font-size: 40px; font-weight: bold; color: #94a3b8; }
 
-.digital-id-card-light h2 { margin: 5px 0; font-size: 24px; color: #0f172a; font-weight: 700; }
+/* ⚠️ INCREASED SPECIFICITY to force the change */
+.dashboard-wrapper .digital-id-card-light h2 {
+  font-size: 25px !important;  /* Reduced size & forced with !important */
+  color: #0f172a !important;   /* Dark Blue */
+  margin: 10px 0 5px 0;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.5px;
+  
+  /* Optional: Prevents long names from breaking layout */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
 .role { color: #64748b; font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; margin-bottom: 15px; }
 
 .id-meta {
@@ -227,7 +243,7 @@
   box-shadow: 0 6px 20px rgba(124, 58, 237, 0.5);
 }
 
-.qr-box { margin-top: 5px; padding: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; }
+.qr-box { margin-top: 1px; padding: 8px; background: white; border: 1px solid #e2e8f0; border-radius: 8px; }
 
 /* --- MODAL (POPUP) --- */
 .modal-overlay {
@@ -239,7 +255,7 @@
   position: relative; display: flex; flex-direction: column; align-items: center;
   animation: scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.close-modal-btn { position: absolute; top: -40px; right: 0; background: none; border: none; color: white; cursor: pointer; }
+.close-modal-btn { position: absolute; top: 10px; right: 0; background: none; border: none; color: white; cursor: pointer; }
 .download-btn-modal { margin-top: 20px; background: white; color: #1e293b; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer; transition: transform 0.2s; }
 .download-btn-modal:hover { transform: scale(1.05); }
 
@@ -296,8 +312,8 @@
 
   /* 6. Fix Close Button Position on Mobile Modal */
   .close-modal-btn {
-    top: -45px;
-    right: -9px; 
+    top: -15px;
+    right: 9px; 
     background: rgba(0,0,0,0.5); /* Add background so it's visible over content */
     border-radius: 50%;
     padding: 5px;

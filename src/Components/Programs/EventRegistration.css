@@ -1,0 +1,418 @@
+/* --- LAYOUT & BACKGROUND --- */
+.reg-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  padding: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.reg-container {
+  width: 100%;
+  max-width: 500px;
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 80px;
+}
+
+/* --- NAVIGATION --- */
+.back-nav-btn {
+  position: absolute;
+  top: -50px;
+  left: 0;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.back-nav-btn:hover { color: white; }
+
+.loading-screen {
+  color: white;
+  font-size: 1.2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* --- MAIN CARD STYLES --- */
+.form-card, .success-card {
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+/* Header Section */
+.form-header {
+  text-align: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 20px;
+}
+
+.event-type-tag {
+  font-size: 0.8rem;
+  color: #a855f7;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-header h1 {
+  color: white;
+  font-size: 1.8rem;
+  margin: 5px 0 10px;
+  line-height: 1.2;
+}
+
+.header-meta {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+.header-meta span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --- FORM INPUTS & COMBO BOXES --- */
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.input-group label {
+  color: #cbd5e1;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.input-group input, .input-group select {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 12px;
+  border-radius: 8px;
+  color: white;
+  outline: none;
+  transition: border 0.2s;
+  font-family: inherit;
+  
+  /* Ensures dropdown arrow isn't ugly in some browsers */
+  appearance: none; 
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23cbd5e1%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px top 50%;
+  background-size: 10px auto;
+}
+
+/* ⚠️ Fix for Dropdown Options Visibility */
+.input-group select option {
+  background-color: #1e293b; /* Dark background for options */
+  color: white;
+}
+
+/* Remove arrow for inputs (keep it only for select) */
+.input-group input {
+  background-image: none;
+}
+
+.input-group input:focus, .input-group select:focus {
+  border-color: #3b82f6;
+}
+
+.row-group {
+  display: flex;
+  gap: 15px;
+}
+.row-group .input-group { flex: 1; }
+
+/* Locked/Disabled Inputs (Member) */
+.locked-input {
+  background: rgba(16, 185, 129, 0.05) !important;
+  border-color: rgba(16, 185, 129, 0.2) !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+}
+
+.member-privilege-badge {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* --- BUTTONS --- */
+.review-btn {
+  width: 100%;
+  padding: 14px;
+  background: #3b82f6; /* Solid Blue */
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  margin-top: 10px;
+}
+.review-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+}
+
+/* --- PREVIEW SECTION (STEP 2) --- */
+.preview-section h3 {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 10px;
+}
+
+.preview-grid {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.preview-item {
+  background: rgba(15, 23, 42, 0.6);
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-item label {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.preview-item div {
+  color: #e2e8f0;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* --- ACTION BUTTONS (EDIT / SUBMIT) --- */
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.edit-btn {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #475569;
+  color: #cbd5e1;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  transition: all 0.2s;
+  font-size: 0.95rem;
+}
+
+.edit-btn:hover {
+  background: rgba(255,255,255,0.05);
+  color: white;
+  border-color: #cbd5e1;
+}
+
+.submit-reg-btn {
+  flex: 2;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.submit-reg-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+/* --- SUCCESS STATE (STEP 3) --- */
+.success-card {
+  text-align: center;
+}
+
+.success-icon {
+  margin-bottom: 20px;
+}
+
+.success-card h2 {
+  color: white;
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+}
+
+.success-card p {
+  color: #cbd5e1;
+  margin-bottom: 25px;
+}
+
+.whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #25D366;
+  color: white;
+  padding: 14px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-btn:hover {
+  transform: translateY(-2px);
+  background: #22c35e;
+}
+
+.small-note {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 20px;
+}
+
+.secondary-btn {
+  margin-top: 25px;
+  margin-left: -10px;
+  background: transparent;
+  color: #94a3b8;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.secondary-btn:hover {
+  color: white;
+}
+
+/* --- ANIMATIONS --- */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 600px) {
+  .reg-page-wrapper {
+    align-items: flex-start; /* Prevent centering clipping on small screens */
+    padding: 15px; /* Less outer padding */
+  }
+
+  .reg-container {
+    padding-top: 70px; /* Reduced top space */
+    padding-bottom: 60px;
+  }
+
+  .form-card, .success-card {
+    padding: 24px 20px; /* Tighter padding inside card */
+    border-radius: 20px;
+  }
+  
+  /* Make Header smaller */
+  .form-header h1 { font-size: 1.5rem; }
+  .header-meta { font-size: 0.85rem; gap: 10px; }
+  
+  /* Stack Rows Vertically */
+  .row-group { 
+    flex-direction: column; 
+    gap: 0; 
+  }
+
+  /* Prevent iOS Zoom on Focus (Critical) */
+  .input-group input, 
+  .input-group select {
+    font-size: 16px; 
+  }
+
+  /* Safe Back Button Position */
+  .back-nav-btn {
+    position: relative; /* Not absolute anymore */
+    top: 0;
+    margin-bottom: 15px;
+    padding: 5px 0;
+  }
+
+  /* Stack Action Buttons on Mobile */
+  .form-actions {
+    flex-direction: column-reverse; /* Submit on top, Edit below */
+    gap: 15px;
+  }
+
+  .edit-btn, .submit-reg-btn {
+    width: 100%; /* Full width buttons */
+    padding: 16px; /* Fat finger friendly */
+  }
+
+  .secondary-btn {
+    padding: 15px; /* Easier to tap link */
+    display: block;
+    margin-left: 75px;
+  }
+}
