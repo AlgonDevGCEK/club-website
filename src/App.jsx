@@ -12,7 +12,9 @@ import Hero from './Components/Hero/Hero';
 import Footer from "./Components/Footer/Footer";
 import Gallery from './Components/gallery/Gallery';
 import AdminUpload from './Components/gallery/AdminUpload';
+import AdminMemberManager from './Components/Admin/AdminMemberManager'; // From Snippet 1
 import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
+import EventRegistration from './Components/Programs/EventRegistration'; // From Snippet 1
 
 // Pages
 import AboutPage from "./pages/AboutPage";
@@ -29,6 +31,7 @@ import './index.css';
 
 /**
  * Utility Component: Resets scroll to top on every route change
+ * (From Snippet 2)
  */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -59,8 +62,7 @@ const App = () => {
           <Route path="/upcoming-programs" element={<UpcomingPrograms />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/verify/:userId" element={<VerifyUser />} />
-
+          
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -70,7 +72,12 @@ const App = () => {
           {/* Protected / App Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-upload" element={<AdminUpload />} />
+          <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          
+          {/* Extra Routes from Snippet 1 */}
+          <Route path="/admin-member-manager" element={<AdminMemberManager />} />
+          <Route path="/register/:id" element={<EventRegistration />} />
         </Routes>
       </div>
 

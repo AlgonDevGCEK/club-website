@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient'; 
-import { X, Clock, MapPin, Calendar, Users, ArrowRight, Sparkles } from 'lucide-react';
+import { X, Clock, MapPin, Calendar, Users, ArrowRight, Sparkles, Image as ImageIcon } from 'lucide-react';
 import './UpcomingPrograms.css';
 
 const UpcomingPrograms = () => {
@@ -14,15 +14,22 @@ const UpcomingPrograms = () => {
     fetchPrograms();
   }, []);
 
-  // Prevent body scroll when modal is open
+  // Fix for Sticky Scroll
   useEffect(() => {
     if (selectedProgram) {
+      // LOCK: Stop scrolling on both body and html
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      // UNLOCK: Clear the inline style so CSS takes over
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
+
+    // CLEANUP: Ensure scroll is restored if you leave the page
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [selectedProgram]);
 
@@ -71,9 +78,6 @@ const UpcomingPrograms = () => {
       <div className="upcoming-container">
         
         <div className="upcoming-header animate-fade-in">
-          <div className="header-icon">
-            <Sparkles size={40} />
-          </div>
           <h2 className="upcoming-title">Programs & Events</h2>
           <p className="upcoming-subtitle">Join our exciting events and level up your skills</p>
         </div>
@@ -96,34 +100,53 @@ const UpcomingPrograms = () => {
                 onClick={(e) => handleCardClick(program, e)}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className="card-glow"></div>
-                <span className={`program-badge ${status.style}`}>
-                  {status.label}
-                </span>
-
-                <h3 className="program-title">{program.title}</h3>
-                <p className="program-description">{program.description}</p>
-
-                <div className="program-meta">
-                  <div className="meta-item">
-                    <Calendar size={16}/>
-                    <span>{program.date}</span>
-                  </div>
-                  <div className="meta-item">
-                    <Clock size={16}/>
-                    <span>{program.time}</span>
-                  </div>
+                {/* --- NEW: Image Section --- */}
+                <div className="card-image-container">
+                  <span className={`program-badge ${status.style}`}>
+                    {status.label}
+                  </span>
+                  {program.image_url ? (
+                    <img 
+                      src={program.image_url} 
+                      alt={program.title} 
+                      className="card-img" 
+                      loading="lazy"
+                    />
+                  ) : (
+                    // Fallback if no image is provided
+                    <div className="card-img-placeholder">
+                      <ImageIcon size={40} opacity={0.3} />
+                    </div>
+                  )}
+                  <div className="card-overlay"></div>
                 </div>
 
-                <div className="program-footer">
-                  <div className="program-seats">
-                    <span className="seats-indicator"></span>
-                    <span>{program.total_seats} Seats</span>
+                {/* --- Content Section --- */}
+                <div className="card-content">
+                  <h3 className="program-title">{program.title}</h3>
+                  <p className="program-description">{program.description}</p>
+
+                  <div className="program-meta">
+                    <div className="meta-item">
+                      <Calendar size={16}/>
+                      <span>{program.date}</span>
+                    </div>
+                    <div className="meta-item">
+                      <Clock size={16}/>
+                      <span>{program.time}</span>
+                    </div>
                   </div>
-                  <button className="register-btn">
-                    View Details
-                    <ArrowRight size={16} />
-                  </button>
+
+                  <div className="program-footer">
+                    <div className="program-seats">
+                      <span className="seats-indicator"></span>
+                      <span>{program.total_seats} Seats</span>
+                    </div>
+                    <button className="register-btn">
+                      View
+                      <ArrowRight size={16} />
+                    </button>
+                  </div>
                 </div>
               </div>
             );
@@ -143,6 +166,13 @@ const UpcomingPrograms = () => {
             <button className="modal-close" onClick={handleCloseModal}>
               <X size={24} />
             </button>
+
+            {/* Optional: Show Image in Modal Header too */}
+            {selectedProgram.image_url && (
+              <div className="modal-hero-image">
+                 <img src={selectedProgram.image_url} alt={selectedProgram.title} />
+              </div>
+            )}
 
             <div className="modal-content">
               <div className="modal-header">
