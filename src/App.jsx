@@ -21,7 +21,7 @@ import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
-import EventRegistration from './Components/Programs/EventRegistration'; 
+import EventRegistration from './Components/Programs/EventRegistration';
 
 // Inside <Routes>
 
@@ -62,6 +62,7 @@ const App = () => {
           <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin-member-manager" element={<AdminMemberManager />} />
+          <Route path="/register/:id" element={<EventRegistration />} />
         </Routes>
       </div>
 
