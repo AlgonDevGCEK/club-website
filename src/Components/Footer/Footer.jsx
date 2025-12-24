@@ -1,7 +1,7 @@
 import React from "react";
 import "./Footer.css";
 import { FaInstagram, FaGithub, FaLinkedinIn } from "react-icons/fa";
-
+import { NavLink, useNavigate } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="footer">
@@ -45,10 +45,10 @@ const Footer = () => {
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.4s' }}>
           <h4>Useful Links</h4>
           <ul>
-            <li>About Us</li>
-            <li>Gallery</li>
-            <li>Contact</li>
-            <li>Join Us</li>
+            <li><NavLink to="/about">About Us</NavLink></li>
+           <li><NavLink to="/gallery">Gallery</NavLink></li>
+            <li><NavLink to="/contact">Contact Us</NavLink></li>
+            <li><NavLink to="/signup">Join Us</NavLink></li>
           </ul>
         </div>
 

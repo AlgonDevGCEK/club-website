@@ -1,13 +1,18 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation
+} from "react-router-dom";
 
 // Components
 import Navbar from './Components/Navbar/Navbar';
 import Hero from './Components/Hero/Hero';
-
 import Footer from "./Components/Footer/Footer";
 import Gallery from './Components/gallery/Gallery';
 import AdminUpload from './Components/gallery/AdminUpload';
+import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
 
 // Pages
 import AboutPage from "./pages/AboutPage";
@@ -18,25 +23,30 @@ import ForgotPassword from "./pages/password/ForgotPassword";
 import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
-
-
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
-import EventRegistration from './Components/Programs/EventRegistration'; 
-
-// Inside <Routes>
-
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route
-} from "react-router-dom";
 
 import './index.css';
+
+/**
+ * Utility Component: Resets scroll to top on every route change
+ */
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Moves the window back to the top-left corner
+    window.scrollTo(0, 0);
+  }, [pathname]); // Fires every time the URL path changes
+
+  return null;
+};
 
 const App = () => {
   return (
     <Router>
+      {/* This must be inside <Router> to work */}
+      <ScrollToTop /> 
+
       <div className='nav-hero'>
         <Navbar />
       </div>
@@ -60,7 +70,6 @@ const App = () => {
           {/* Protected / App Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-upload" element={<AdminUpload />} />
-          <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
