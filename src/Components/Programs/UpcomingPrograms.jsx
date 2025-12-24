@@ -14,21 +14,22 @@ const UpcomingPrograms = () => {
     fetchPrograms();
   }, []);
 
-  // Prevent body scroll when modal is open
-  // Prevent body AND html scroll when modal is open
+  // Fix for Sticky Scroll
   useEffect(() => {
     if (selectedProgram) {
+      // LOCK: Stop scrolling on both body and html
       document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden'; // Fixes the issue
+      document.documentElement.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
+      // UNLOCK: Clear the inline style so CSS takes over
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
 
-    // Cleanup function to ensure scroll is restored if component unmounts
+    // CLEANUP: Ensure scroll is restored if you leave the page
     return () => {
-      document.body.style.overflow = 'auto';
-      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [selectedProgram]);
 
