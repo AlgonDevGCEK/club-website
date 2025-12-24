@@ -26,6 +26,7 @@ import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminPrograms from './Components/Admin/AdminPrograms';
 
 import './index.css';
 
@@ -74,6 +75,7 @@ const App = () => {
           <Route path="/admin-upload" element={<AdminUpload />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/programs" element={<AdminPrograms />} />
           
           {/* Extra Routes from Snippet 1 */}
           <Route path="/admin-member-manager" element={<AdminMemberManager />} />

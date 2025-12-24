@@ -35,9 +35,13 @@ const UpcomingPrograms = () => {
 
   const fetchPrograms = async () => {
     try {
+      setLoading(true);
       const { data, error } = await supabase
         .from('programs')
         .select('*')
+        // 1. Sort by Priority (Smallest number first: 1, 2, 3...)
+        .order('display_order', { ascending: true }) 
+        // 2. Then sort by Date for events with the same priority
         .order('date', { ascending: true });
 
       if (error) throw error;
