@@ -19,10 +19,8 @@ import UpdatePassword from "./pages/password/UpdatePassword";
 import Dashboard from "./pages/dashboard-page/Dashboard";
 import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 
-// Gallery Components
- 
-// Inside App.js
 
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
 import EventRegistration from './Components/Programs/EventRegistration'; 
 
@@ -63,9 +61,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/admin-upload" element={<AdminUpload />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
-          <Route path="/upcoming-programs" element={<UpcomingPrograms />} />
-                 <Route path="/register/:id" element={<EventRegistration />} />  
-
+          <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
       </div>
 
