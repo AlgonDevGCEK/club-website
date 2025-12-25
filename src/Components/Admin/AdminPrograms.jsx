@@ -137,7 +137,7 @@ const AdminPrograms = () => {
 
       // Logo
       try {
-        doc.addImage(clubLogo, 'JPEG', 14, 14, 39, 18); 
+        doc.addImage(clubLogo, 'JPEG', 12, 12, 41, 18); 
       } catch (err) {
         console.warn("Logo failed to load:", err);
       }
