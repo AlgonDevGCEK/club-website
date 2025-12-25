@@ -9,6 +9,16 @@ const VerifyUser = () => {
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState("loading"); // loading, valid, expired, invalid
 
+  // --- NEW: INITIALS LOGIC ---
+  const getInitials = (name) => {
+    if (!name) return "?";
+    const names = name.split(" ");
+    if (names.length >= 2) {
+      return (names[0][0] + names[1][0]).toUpperCase();
+    }
+    return names[0][0].toUpperCase();
+  };
+
   useEffect(() => {
     const fetchMember = async () => {
       if (!userId) {
@@ -58,9 +68,29 @@ const VerifyUser = () => {
           <>
             <CheckCircle size={80} color="#4ade80" style={{marginBottom:'20px'}} />
             <h2 style={{color:'#4ade80', margin:'0 0 10px 0'}}>VERIFIED MEMBER</h2>
-            <div style={{width:'100px', height:'100px', borderRadius:'50%', overflow:'hidden', margin:'20px auto', border:'4px solid #4ade80'}}>
-               <img src={member.profile_pic} style={{width:'100%', height:'100%', objectFit:'cover'}} alt="Profile"/>
+            
+            {/* UPDATED PROFILE PICTURE / INITIALS SECTION */}
+            <div style={{
+                width:'100px', 
+                height:'100px', 
+                borderRadius:'50%', 
+                overflow:'hidden', 
+                margin:'20px auto', 
+                border:'4px solid #4ade80',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                background: member.profile_pic ? 'transparent' : 'linear-gradient(135deg, #3b82f6, #2563eb)'
+            }}>
+               {member.profile_pic ? (
+                   <img src={member.profile_pic} style={{width:'100%', height:'100%', objectFit:'cover'}} alt="Profile"/>
+               ) : (
+                   <span style={{ color: 'white', fontSize: '32px', fontWeight: 'bold', letterSpacing: '1px' }}>
+                       {getInitials(member.name)}
+                   </span>
+               )}
             </div>
+
             <h3 style={{color:'white', margin:'10px 0'}}>{member.name}</h3>
             <p style={{color:'#94a3b8', margin:'5px 0'}}>ID: {member.user_id.slice(0,8)}</p>
             <p style={{color:'#94a3b8', margin:'5px 0'}}>{member.department} • {member.year}</p>
