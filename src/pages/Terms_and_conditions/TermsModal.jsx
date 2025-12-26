@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft , FileText} from 'lucide-react';
 import './TermsModal.css';
 
 const TermsModal = () => {
@@ -15,7 +15,7 @@ const TermsModal = () => {
             <ArrowLeft size={18} /> Back
           </button>
           <div className="header-info">
-            <h1>Terms & Conditions</h1>
+            <h1>Terms & Conditions <FileText size={28} color="#3b82f6" /></h1>
             <p>ALGON DC GCEK • Last updated: Dec 26, 2025</p>
           </div>
         </header>
