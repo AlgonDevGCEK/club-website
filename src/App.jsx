@@ -24,7 +24,7 @@ import VerifyUser from "./pages/qr-verify-page/VerifyUser";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPrograms from './Components/Admin/AdminPrograms';
 import TermsModal from './pages/Terms_and_conditions/TermsModal';
-
+import PrivacyPolicy from './pages/Privacypolicy-page/PrivacyPolicy';
 import './index.css';
 
 const ScrollToTop = () => {
@@ -54,6 +54,7 @@ const App = () => {
           <Route path="/register/:id" element={<EventRegistration />} />
           <Route path="/verify/:userId" element={<VerifyUser />} />
           <Route path="/terms-and-conditions" element={<TermsModal />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           
           {/* --- 2. AUTH ROUTES (Login/Signup) --- */}
           <Route path="/login" element={<Login />} />
