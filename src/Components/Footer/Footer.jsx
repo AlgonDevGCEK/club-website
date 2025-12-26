@@ -33,12 +33,12 @@ const Footer = () => {
         </div>
 
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.3s' }}>
-          <h4>Programs</h4>
+          <h4>Policies</h4>
           <ul>
-            <li>Workshops</li>
-            <li>Hackathons</li>
-            <li>Projects</li>
-            <li>Community Events</li>
+            <li><NavLink to="/terms-and-conditions">Terms & Conditions</NavLink></li>
+            <li><NavLink to="/privacy-policy">Privacy Policy</NavLink></li>
+            <li><NavLink to="/refund-policy">Refund Policy</NavLink></li>
+            <li><NavLink to="/code-of-conduct">Code of Conduct</NavLink></li>
           </ul>
         </div>
 
@@ -54,13 +54,13 @@ const Footer = () => {
 
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.5s' }}>
           <h4>Contact</h4>
-          <p>📍 Government College of Engineering Kannur</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mangattuparamba</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parassinikadavu P.O.</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kannur, Kerala</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;670563</p>
+          <p>Government College of Engineering Kannur</p>
+            <p>Mangattuparamba</p>
+            <p>Parassinikadavu P.O.</p>
+            <p>Kannur, Kerala</p>
+            <p>670563</p>
           <br></br>
-          <p>✉️&nbsp;&nbsp;adcgcek25@gmail.com</p><br></br>
+          <p>adcgcek25@gmail.com</p><br></br>
         </div>
 
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.6s' }}>
