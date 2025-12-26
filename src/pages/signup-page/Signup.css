@@ -1,265 +1,442 @@
-/* Signup.css */
 
-/* --- MAIN LAYOUT --- */
+:root {
+  --bg-dark: #0f172a;
+  --card-bg: #1e293b;
+  --neon-blue: #00d2ff;
+  --neon-violet: #8b5cf6;
+  --neon-pink: #ff007f;
+  --neon-green: #34d399;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --input-bg: #0f172a;
+  --border-dim: #334155;
+  --error-bg: rgba(255, 0, 127, 0.1);
+}
+
 .signup-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 80px; 
-  padding-bottom: 100px;
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(
-    180deg,
-    #111827 0%,
-    #1e293b 50%,
-    #020617 100%
-  );
-  font-family: 'Poppins', sans-serif;
+  180deg,
+  #111827 0%,
+  #1e293b 50%,  
+  #020617 100%
+);  
+  padding: 30px;
+  padding-top: 120px;
+  padding-bottom: 90px;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 .signup-card {
-  background: rgba(30, 41, 59, 0.7);
-  backdrop-filter: blur(16px);
-  padding: 40px;
-  border-radius: 16px;
   width: 100%;
-  max-width: 500px;
-  color: #e2e8f0;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  max-width: 650px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 24px;
+  padding: 40px;
+  padding-top: 40px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   position: relative;
+  overflow: hidden;
 }
 
-/* --- PROGRESS BAR --- */
-.progress-bar div {
-  transition: background-color 0.4s ease;
+/* --- Progress Dots --- */
+.progress-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
-/* --- TEXT & HEADERS --- */
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--border-dim);
+  transition: all 0.3s ease;
+}
+
+.progress-dot.active {
+  background: var(--neon-blue);
+  box-shadow: 0 0 10px var(--neon-blue);
+}
+
+.progress-line {
+  width: 40px;
+  height: 2px;
+  background: var(--border-dim);
+}
+
+.progress-line.active {
+  background: var(--neon-blue);
+}
+
+/* --- Form Headers --- */
 .signup-title {
-  color: #f8fafc;
-  margin-bottom: 5px;
-  font-size: 24px;
-  font-weight: 700;
+  color: var(--text-main);
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 30px;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+.error-banner {
+  background: var(--error-bg);
+  border: 1px solid var(--neon-pink);
+  color: var(--neon-pink);
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
-/* --- INPUTS & SELECTS --- */
+/* --- Input Groups --- */
 .input-group {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+.input-group label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-left: 4px;
+}
+.password-container label {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  margin-left: 4px;
 }
 
-.input-group input,
-.input-group select {
-  width: 100%;
-  padding: 12px 15px;
-  background: #0f172a;
-  border: 1px solid #334155;
-  border-radius: 8px;
+input, select {
+  background: var(--input-bg);
+  border: 1px solid var(--border-dim);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: var(--text-main);
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+input:focus, select:focus {
   outline: none;
-  font-size: 14px;
-  color: white;
-  transition: border-color 0.2s;
-}
-
-.input-group input:focus,
-.input-group select:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
-.input-group input::placeholder {
-  color: #64748b;
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.1);
 }
 
 .row-group {
   display: flex;
   gap: 15px;
-  margin-bottom: 15px;
-}
-
-/* --- MODERN TOGGLE SWITCH --- */
-.toggle-group {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 20px 0;
-  padding: 12px 15px;
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  gap: 10px;
-}
-
-.toggle-label {
-  font-size: 13px;
-  color: #cbd5e1;
-  cursor: pointer;
-  text-align: left;
-  flex: 1;
-}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 22px;
-  flex-shrink: 0;
-}
-
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #334155;
-  transition: .4s;
-  border-radius: 34px;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 16px;
-  width: 16px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .4s;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-input:checked + .slider {
-  background-color: #3b82f6;
-}
-
-input:checked + .slider:before {
-  transform: translateX(22px);
-}
-
-/* --- PAYMENT STEP STYLES --- */
-.payment-box {
-  background: rgba(15, 23, 42, 0.5);
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.payment-box label {
-  display: block;
-  margin-bottom: 8px;
-  color: #94a3b8;
-  font-size: 13px;
-}
-
-.amount-display h1 {
-  margin: 5px 0;
-  text-shadow: 0 0 15px rgba(52, 211, 153, 0.3);
-}
-
-.qr-container {
-  background: white;
-  padding: 15px;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 4px solid #3b82f6;
   margin-bottom: 20px;
 }
 
-/* --- BUTTONS --- */
-.signup-btn {
-  width: 100%;
-  padding: 12px;
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
-  color: #ffffff;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* --- Password Strength Meter --- */
+.password-container {
+  margin-bottom: 20px;
+}
+
+.input-with-icon {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+}
+
+.input-with-icon input {
+  width: 100%;
+  padding-right: 50px;
+}
+
+.input-with-icon button {
+  position: absolute;
+  right: 15px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+/* --- Password Strength Meter (Red -> Orange -> Green) --- */
+.strength-meter {
+  display: flex;
+  gap: 6px; /* Slightly wider gap for distinct colors */
+  margin-top: 10px;
+}
+
+.strength-meter .bar {
+  flex: 1;
+  height: 4px;
+  background: #334155; /* Dark base color (inactive) */
+  border-radius: 10px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: none;
+}
+
+/* 1st Bar: Red (Weak) */
+.strength-meter .bar:nth-child(1).active {
+  background: #ff4757; 
+  box-shadow: 0 0 10px rgba(255, 71, 87, 0.5);
+}
+
+/* 2nd Bar: Orange/Yellow (Moderate) */
+.strength-meter .bar:nth-child(2).active {
+  background: #fca5a5; 
+  background: linear-gradient(90deg, #ff4757, #ffa502); 
+  background: #ffa502; 
+  box-shadow: 0 0 10px rgba(255, 165, 2, 0.5);
+}
+
+/* 3rd Bar: Green (Strong) */
+.strength-meter .bar:nth-child(3).active {
+  background: #2ed573; 
+  box-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+}
+
+.rules-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 8px;
 }
 
-.signup-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+.rules-list li {
+  font-size: 11px;
+  color: var(--text-muted);
 }
 
-.signup-btn:active {
-  transform: translateY(0);
+.rules-list li.met {
+  color: var(--neon-green);
 }
 
-/* --- ALERTS --- */
-.error {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
-  font-size: 13px;
+/* --- Membership Cards --- */
+.duration-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.duration-card {
+  background: var(--input-bg);
+  border: 2px solid var(--border-dim);
+  padding: 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.duration-card.selected {
+  border-color: var(--neon-blue);
+  background: rgba(0, 210, 255, 0.05);
+}
+
+.duration-card span {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.duration-card strong {
+  font-size: 18px;
+  color: var(--neon-blue);
+}
+
+/* --- Payment Section --- */
+.qr-section {
+  background: #000;
+  padding: 25px;
+  border-radius: 20px;
+  margin: 25px 0;
+  text-align: center;
+  border: 1px dashed var(--border-dim);
+}
+
+.qr-wrapper {
+  background: white;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 12px;
+  display: inline-block;
   margin-bottom: 15px;
-  text-align: center;
-  border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
-/* --- SUCCESS VIEW --- */
-.success-view {
-  padding: 10px 0;
-  text-align: center;
-  animation: fadeIn 0.5s ease-in-out;
+.upi-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: linear-gradient(135deg, var(--neon-blue), var(--neon-violet));
+  color: white;
+  text-decoration: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-top: 10px;
 }
 
-.success-view h3 {
-  color: #f8fafc;
-  margin-bottom: 10px;
+/* --- Toggles & Checks --- */
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
 }
 
-.success-view p {
-  line-height: 1.6;
-  color: #94a3b8;
-  font-size: 14px;
+.terms-check {
+  margin-top: 25px;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+.terms-check a {
+  color: var(--neon-violet);
+  text-decoration: none;
+}
+
+/* --- Buttons --- */
+.signup-btn {
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  border: none;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 30px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.signup-btn.neon-blue {
+  background: linear-gradient(90deg, var(--neon-blue), var(--neon-violet));
+  color: white;
+}
+
+.signup-btn.neon-green {
+  background: var(--neon-green);
+  color: var(--bg-dark);
+}
+
+.signup-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.back-btn {
+  background: var(--input-bg);
+  border: 1px solid var(--border-dim);
+  color: var(--text-muted);
+  padding: 14px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+/* =========================================
+   ADD THIS TO THE BOTTOM OF YOUR CSS FILE
+   ========================================= */
+
+/* 1. INPUT ERROR STATE (The Red Glow) */
+input.input-error, 
+select.input-error {
+  border-color: #ff007f !important;
+  box-shadow: 0 0 0 4px rgba(255, 0, 127, 0.1) !important;
+  background-color: rgba(255, 0, 127, 0.05);
+}
+
+/* 2. ERROR TEXT MESSAGE */
+.error-text {
+  color: #ff007f;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 6px;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- FOOTER --- */
-.signup-footer {
-  margin-top: 20px;
-  font-size: 13px;
-  text-align: center;
+/* 3. DISABLED BUTTON STATE (Visual Lock) */
+.signup-btn.disabled {
+  background: #334155; /* Dark Grey */
   color: #94a3b8;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none !important;
+  box-shadow: none;
 }
 
-.signup-footer a {
-  color: #60a5fa;
-  text-decoration: none;
-  font-weight: 600;
-  margin-left: 5px;
+/* 4. PAYMENT INSTRUCTION TEXT */
+.instruction {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 12px;
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
-@media (max-width: 600px) {
+.sub-instruction {
+  display: block;
+  margin-top: 10px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+/* 5. QR CODE WRAPPER (Ensure it scans correctly) */
+.qr-wrapper {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  display: inline-block;
+}
+.btn-group {
+  display: flex;
+  gap: 12px;
+}
+
+/* --- Success View --- */
+.success-view {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.success-icon {
+  color: var(--neon-green);
+  margin-bottom: 20px;
+  filter: drop-shadow(0 0 10px var(--neon-green));
+}
+
+.success-view h3 {
+  color: var(--text-main);
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
   .signup-card {
-    width: 95%;
-    padding: 30px 20px;
-  }
-  .row-group {
-    flex-direction: column;
-    gap: 0;
+    padding: 25px;
+    border-radius: 15px;
+    min-height: 100vh;
   }
 }
