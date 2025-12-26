@@ -54,13 +54,13 @@ const Footer = () => {
 
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.5s' }}>
           <h4>Contact</h4>
-          <p>📍 Government College of Engineering Kannur</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Mangattuparamba</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Parassinikadavu P.O.</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Kannur, Kerala</p>
-            <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;670563</p>
+          <p>Government College of Engineering Kannur</p>
+            <p>Mangattuparamba</p>
+            <p>Parassinikadavu P.O.</p>
+            <p>Kannur, Kerala</p>
+            <p>670563</p>
           <br></br>
-          <p>✉️&nbsp;&nbsp;adcgcek25@gmail.com</p><br></br>
+          <p>adcgcek25@gmail.com</p><br></br>
         </div>
 
         <div className="footer-column animate-slide-up" style={{ animationDelay: '0.6s' }}>
