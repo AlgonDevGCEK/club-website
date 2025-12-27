@@ -435,7 +435,7 @@ select.input-error {
 /* --- Responsive --- */
 @media (max-width: 480px) {
   .signup-card {
-    padding: 25px;
+    padding: 20px;
     border-radius: 15px;
     min-height: 100vh;
   }

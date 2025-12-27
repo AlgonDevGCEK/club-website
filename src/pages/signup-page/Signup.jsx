@@ -26,7 +26,7 @@ const Signup = () => {
     phone: "",
     department: "",
     year: "",
-    course: "B.Tech", 
+    course: "", 
     password: "",
     confirmPassword: "",
     termsAccepted: false,
@@ -137,7 +137,7 @@ const Signup = () => {
       formData.phone && !errors.phone && formData.phone.length === 10 &&
       formData.password && strengthScore >= 4 &&
       formData.confirmPassword && !errors.confirmPassword &&
-      formData.department && formData.year &&
+      formData.department && formData.year && formData.course &&
       formData.termsAccepted
     );
   }, [formData, errors, strengthScore]);
@@ -281,8 +281,12 @@ const Signup = () => {
                </select>
                <select name="year" value={formData.year} onChange={handleChange} required>
                   <option value="">Year</option>
-                  <option value="1st Year">1st</option><option value="2nd Year">2nd</option>
-                  <option value="3rd Year">3rd</option><option value="4th Year">4th</option>
+                  <option value="1st Year">1st Year</option><option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option><option value="4th Year">4th Year</option>
+               </select>
+               <select name="course" value={formData.course} onChange={handleChange} required>
+                  <option value ="">Course</option>
+                  <option value="B.Tech">B.Tech</option>
                </select>
             </div>
 
@@ -290,7 +294,7 @@ const Signup = () => {
             <div className="password-container">
                <label>Choose a Strong Password</label>
                <div className="input-with-icon">
-                  <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} placeholder="Min 8 chars, 1 Upper, 1 Lower, 1 Number & 1 Symbol" />
+                  <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} placeholder="e.g., MyPass123!" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}>
                      {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                   </button>
@@ -320,6 +324,26 @@ const Signup = () => {
    </div>
    {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
 </div>
+
+<div className="input-group" style={{marginTop: '10px'}}>
+        <label>College Verification</label>
+        <div style={{
+            display: 'flex', alignItems: 'center', gap: '12px', 
+            padding: '12px', background: 'var(--input-bg)', 
+            border: '1px solid var(--border-dim)', borderRadius: '14px'
+        }}>
+            <input 
+                type="checkbox" 
+                checked={true} 
+                readOnly 
+                style={{ width: '20px', height: '20px', margin: 0, cursor: 'not-allowed' }}
+            />
+            <span style={{ fontSize: '13px', color: 'var(--text-main)', lineHeight: '1.4' }}>
+                I confirm that I am a student of &nbsp;
+                <strong style={{color: 'var(--neon-blue)'}}>Government College of Engineering Kannur</strong>
+            </span>
+        </div>
+    </div>
 
             <div className="terms-check">
   <label className="checkbox-container">
@@ -361,15 +385,29 @@ const Signup = () => {
                   ))}
               </div>
 
-              <div className="qr-section">
-                  {isMobile ? (
-                      <a href={upiUrl} className="upi-button"><Smartphone size={18}/> Pay via UPI App</a>
-                  ) : (
-                      <div className="qr-wrapper" style={{background:'white', padding:'10px', borderRadius:'10px', display:'inline-block'}}>
-                          <QRCode value={upiUrl} size={150} />
-                      </div>
-                  )}
-              </div>
+              {/* --- Updated Payment Display (Step 2) --- */}
+<div className="qr-section">
+    <p className="instruction">
+       {isMobile ? "Scan QR or Tap Button" : "Scan QR to Pay"}
+    </p>
+
+    {/* 1. Always show the QR Code (Desktop & Mobile) */}
+    <div className="qr-wrapper" style={{background:'white', padding:'10px', borderRadius:'10px', display:'inline-block'}}>
+        <QRCode value={upiUrl} size={150} />
+    </div>
+
+    {/* 2. Show Button ONLY on Mobile */}
+    {isMobile && (
+        <div style={{marginTop: '15px', width: '100%'}}>
+           <a href={upiUrl} className="upi-button">
+              <Smartphone size={18}/> Pay via UPI App
+           </a>
+           <small className="sub-instruction">
+              (If the button doesn't work, screenshot the QR and scan it from your gallery using your UPI app)
+           </small>
+        </div>
+    )}
+</div>
               
               <div className="input-group">
                   <label>Transaction ID (UTR)</label>
@@ -378,11 +416,16 @@ const Signup = () => {
                      value={formData.paymentRef} onChange={handleChange} 
                      placeholder="Enter 12-digit UTR" maxLength={12}
                   />
+                  {formData.paymentRef.length > 0 && formData.paymentRef.length !== 12 && (
+                   <small className="error-text">
+                           Current length: {formData.paymentRef.length} (Must be 12)
+                      </small>
+                    )}
               </div>
 
               <div className="btn-group">
                   <button type="button" onClick={() => setStep(1)} className="back-btn"><ArrowLeft/></button>
-                  <button type="submit" className="signup-btn neon-green" disabled={loading || formData.paymentRef.length < 12}>
+                  <button type="submit" className="signup-btn neon-green" disabled={loading || formData.paymentRef.length !== 12}>
                      {loading ? "Submitting..." : "Finish Registration"}
                   </button>
               </div>
