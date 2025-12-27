@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { 
   Rocket, Users, Zap, Award, ArrowRight, 
@@ -10,43 +10,45 @@ import './JoinInfo.css';
 const JoinInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  
   const [fees, setFees] = useState([]);
   const [loading, setLoading] = useState(true);
+  
   const policyReviewRef = useRef(null);
 
-  // --- IMPROVED SCROLL LOGIC WITH REF ---
-  useEffect(() => {
-    // Wait for content to load
-    if (loading) return;
-
-    const shouldScroll = location.hash === '#policy-review' || location.state?.scrollToPolicy;
-    
-    if (shouldScroll && policyReviewRef.current) {
-      // Multiple attempts to ensure scroll happens
-      const scrollToSection = () => {
-        policyReviewRef.current?.scrollIntoView({ 
-          behavior: 'auto', 
-          block: 'center'
-        });
-      };
-
-      // Try immediately
-      scrollToSection();
-      
-      // Try again after a short delay
-      const timer1 = setTimeout(scrollToSection, 100);
-      
-      // Final attempt after animations
-      const timer2 = setTimeout(scrollToSection, 400);
-      
-      return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-      };
+  // --- 1. NUCLEAR SCROLL FIX FOR MOBILE ---
+  useLayoutEffect(() => {
+    // A. Disable the browser's default "remember scroll" behavior
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
     }
-  }, [location.hash, location.state, loading]);
 
-  // Fetch Membership options
+    // B. The Logic
+    const handleScroll = () => {
+      // Check if we strictly NEED to go to the policy section
+      const shouldScrollToPolicy = location.hash === '#policy-review' || location.state?.scrollToPolicy;
+
+      if (!loading && shouldScrollToPolicy && policyReviewRef.current) {
+         policyReviewRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+         // FOR EVERYONE ELSE: FORCE TOP
+         window.scrollTo(0, 0);
+      }
+    };
+
+    // C. Execute immediately
+    handleScroll();
+
+    // D. Execute AGAIN after a tiny delay (Fixes Mobile Browsers ignoring the first command)
+    const timer = setTimeout(() => {
+        handleScroll();
+    }, 10);
+
+    return () => clearTimeout(timer);
+
+  }, [location.pathname, location.hash, loading]); 
+
+  // --- 2. Fetch Data ---
   useEffect(() => {
     const fetchFees = async () => {
       try {
@@ -108,11 +110,13 @@ const JoinInfo = () => {
         {/* 3. Membership Fee Table */}
         <section className="fee-section animate-slide-up">
           <h2>Membership Plans</h2>
-          <div className="fee-grid-container">
+          <p className="section-subtitle">Choose the plan that fits your academic journey</p>
+          
+          <div className="fee-grid-container" style={{ minHeight: '400px' }}>
             {loading ? (
-              <div className="loading-state">
+              <div className="loading-state" style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <Loader2 className="spinner" size={40} color="#3b82f6" />
-                <p>Loading plans...</p>
+                <p style={{ marginTop: '15px', color: '#94a3b8' }}>Loading plans...</p>
               </div>
             ) : (
               fees.map((plan) => (
@@ -138,11 +142,11 @@ const JoinInfo = () => {
           </div>
         </section>
 
-        {/* 4. Policy Review Section - USING REF NOW */}
+        {/* 4. Policy Review */}
         <section 
-          className="policy-review animate-slide-up" 
-          id="policy-review"
-          ref={policyReviewRef}
+           className="policy-review animate-slide-up" 
+           id="policy-review"
+           ref={policyReviewRef}
         >
           <div className="policy-alert">
             <h1><ShieldAlert size={60} color="#1ae917ff" /></h1>

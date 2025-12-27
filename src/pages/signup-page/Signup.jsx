@@ -1,17 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabaseClient";
-import { ArrowRight, ArrowLeft, CheckCircle } from "lucide-react";
+import { 
+  ArrowRight, ArrowLeft, CheckCircle, 
+  Eye, EyeOff, Smartphone, 
+  AlertCircle ,PartyPopper
+} from "lucide-react";
+import QRCode from "react-qr-code"; 
 import "./Signup.css";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
   const [fees, setFees] = useState([]);
-  const [qrCode, setQrCode] = useState("");
-
-  // --- CONFIGURATION ---
-  // Your specific UPI ID is hardcoded here for immediate use
-  const CLUB_UPI_ID = "alanjoseph52006@okicici"; 
-  const CLUB_NAME = "ADC Club";
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [globalError, setGlobalError] = useState("");
+  
+  // Real-time error tracking
+  const [errors, setErrors] = useState({});
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,292 +26,427 @@ const Signup = () => {
     phone: "",
     department: "",
     year: "",
-    course: "",
+    course: "", 
     password: "",
     confirmPassword: "",
-    college: false,
+    termsAccepted: false,
     paymentRef: "",
     duration: 1,
     amountToPay: 0,
     durationLabel: ""
   });
 
-  const [errorMessage, setErrorMessage] = useState("");
-
+  // --- 1. Setup & Hydration ---
   useEffect(() => {
-    // 1. Fetch Membership Fees
-    const fetchFees = async () => {
-      const { data, error } = await supabase
-        .from('membership_fees')
-        .select('*')
-        .order('years', { ascending: true });
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
+    const fetchFees = async () => {
+      const { data } = await supabase.from('membership_fees').select('*').order('years', { ascending: true });
       if (data && data.length > 0) {
         setFees(data);
-        // Set default values based on the first plan
-        setFormData(prev => ({
-          ...prev,
-          duration: data[0].years,
-          amountToPay: data[0].amount,
-          durationLabel: data[0].label
-        }));
+        setFormData(prev => {
+           if(prev.amountToPay === 0) {
+               return { 
+                 ...prev, 
+                 duration: data[0].years, 
+                 amountToPay: data[0].amount, 
+                 durationLabel: data[0].label 
+               };
+           }
+           return prev;
+        });
       }
     };
-
-    // 2. Fetch QR Code Image (for Desktop users)
-    const fetchQR = async () => {
-      const { data } = await supabase
-        .from('payment_config')
-        .select('qr_url')
-        .limit(1)
-        .single();
-
-      if (data) setQrCode(data.qr_url);
-    };
-
     fetchFees();
-    fetchQR();
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // LocalStorage Hydration
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem("algon_signup_draft");
+      if (savedData) setFormData(prev => ({ ...prev, ...JSON.parse(savedData) }));
+    } catch(e) { localStorage.removeItem("algon_signup_draft"); }
+  }, []);
+
+  // Auto-Save
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      localStorage.setItem("algon_signup_draft", JSON.stringify(formData));
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [formData]);
+
+  // --- 2. Real-Time Validation ---
+  const validateField = (name, value) => {
+    let errorMsg = "";
+    switch (name) {
+      case "name":
+        if (value && value.length < 3) errorMsg = "Name must be at least 3 characters";
+        else if (value && !/^[a-zA-Z\s]+$/.test(value)) errorMsg = "Alphabets only (No symbols/numbers)";
+        break;
+      case "phone":
+        if (value && (!/^\d*$/.test(value) || value.length > 10)) errorMsg = "Invalid format";
+        else if (value && value.length === 10 && !/^\d{10}$/.test(value)) errorMsg = "Must be 10 digits";
+        break;
+      case "email":
+        if (value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = "Invalid email format";
+        break;
+      case "confirmPassword":
+        if (value && value !== formData.password) errorMsg = "Passwords do not match";
+        break;
+      default: break;
+    }
+    setErrors(prev => ({ ...prev, [name]: errorMsg }));
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-  };
+    const val = type === "checkbox" ? checked : value;
 
-  const handleDurationChange = (e) => {
-    const selectedYears = parseInt(e.target.value);
-    const selectedPlan = fees.find(f => f.years === selectedYears);
+    setFormData(prev => ({ ...prev, [name]: val }));
+    validateField(name, val);
 
-    if (selectedPlan) {
-      setFormData({
-        ...formData,
-        duration: selectedYears,
-        amountToPay: selectedPlan.amount,
-        durationLabel: selectedPlan.label
-      });
+    // Special check for password match
+    if (name === "password" && formData.confirmPassword) {
+       if (val !== formData.confirmPassword) setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match" }));
+       else setErrors(prev => ({ ...prev, confirmPassword: "" }));
     }
   };
 
-  const handleNext = (e) => {
+  // --- 3. Logic Helpers ---
+  const passwordMetrics = useMemo(() => {
+    const p = formData.password || "";
+    return {
+      length: p.length >= 8,
+      upper: /[A-Z]/.test(p),
+      lower: /[a-z]/.test(p),
+      number: /[0-9]/.test(p),
+      special: /[!@#$%^&*]/.test(p),
+    };
+  }, [formData.password]);
+  
+  const strengthScore = Object.values(passwordMetrics).filter(Boolean).length;
+
+  const isFormValid = useMemo(() => {
+    return (
+      formData.name && !errors.name &&
+      formData.email && !errors.email &&
+      formData.phone && !errors.phone && formData.phone.length === 10 &&
+      formData.password && strengthScore >= 4 &&
+      formData.confirmPassword && !errors.confirmPassword &&
+      formData.department && formData.year && formData.course &&
+      formData.termsAccepted
+    );
+  }, [formData, errors, strengthScore]);
+
+  const upiUrl = useMemo(() => {
+    return `upi://pay?pa=amalnk286@oksbi&pn=ALGON_DC_GCEK&am=${formData.amountToPay}&cu=INR&tn=${formData.durationLabel}`;
+  }, [formData.amountToPay, formData.durationLabel]);
+
+  // --- 4. Submit Handlers ---
+  const handleNext = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.phone || !formData.department || !formData.password) {
-      setErrorMessage("Please fill in all personal details first.");
-      return;
+    if (!isFormValid) return;
+
+    setLoading(true);
+    // Check for duplicate EMAIL only
+    const { data: existing } = await supabase
+        .from("pending_members")
+        .select("email")
+        .eq("email", formData.email)
+        .maybeSingle();
+        
+    setLoading(false);
+
+    if (existing) {
+      setGlobalError("This email has already submitted a registration.");
+    } else {
+      setGlobalError("");
+      setStep(2);
     }
-    if (formData.password !== formData.confirmPassword) {
-      setErrorMessage("Passwords do not match.");
-      return;
-    }
-    if (!formData.college) {
-      setErrorMessage("You must confirm your college affiliation.");
-      return;
-    }
-    setErrorMessage("");
-    setStep(2);
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
-    if (!formData.paymentRef) {
-      setErrorMessage("Please enter the Transaction ID to verify payment.");
+    if (!formData.paymentRef || formData.paymentRef.length < 12) {
+      setGlobalError("Invalid Transaction ID (Must be 12 digits)");
       return;
     }
+    setLoading(true);
+    setGlobalError("");
 
-    setErrorMessage("Submitting application...");
-
-    const { error: insertError } = await supabase.from("pending_members").insert([{
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      department: formData.department,
-      year: formData.year,
-      course: formData.course,
-      payment_ref: formData.paymentRef,
-      duration: formData.durationLabel,
-      amount_paid: formData.amountToPay
-    }]);
-
-    if (insertError) {
-      setErrorMessage("Data Error: " + insertError.message);
-      return;
-    }
-
+    // 1. Create Auth User (Required for Login)
     const { error: authError } = await supabase.auth.signUp({
       email: formData.email,
-      password: formData.password,
+      password: formData.password
     });
 
     if (authError) {
-      setErrorMessage("Auth Error: " + authError.message);
-    } else {
-      setStep(3);
-      setErrorMessage("");
+       if (!authError.message.includes("already registered")) {
+           setGlobalError(authError.message);
+           setLoading(false);
+           return;
+       }
     }
+
+    const { error: dbError } = await supabase.from("pending_members").insert([{
+       name: formData.name,
+       email: formData.email,
+       phone: formData.phone,
+       department: formData.department,
+       year: formData.year,
+       course: formData.course,
+       payment_ref: formData.paymentRef,
+       duration: formData.durationLabel,
+       amount_paid: formData.amountToPay
+    }]);
+
+    if (dbError) {
+      setGlobalError("Database Error: " + dbError.message);
+    } else {
+      localStorage.removeItem("algon_signup_draft");
+      setStep(3);
+    }
+    setLoading(false);
   };
 
-  // --- DYNAMIC UPI LINK GENERATOR ---
-  // This creates the link: upi://pay?pa=...&am=...
-  const upiLink = `upi://pay?pa=${CLUB_UPI_ID}&pn=${encodeURIComponent(CLUB_NAME)}&am=${formData.amountToPay}&cu=INR&tn=Membership_${formData.department}`;
-
+  // --- 5. Render ---
   return (
     <div className="signup-wrapper">
       <div className="signup-card">
-
+        
+        {/* Progress */}
         {step < 3 && (
-          <div className="progress-bar" style={{ display: 'flex', gap: '5px', marginBottom: '20px' }}>
-            <div style={{ height: '4px', flex: 1, borderRadius: '2px', background: step >= 1 ? '#3b82f6' : '#334155' }}></div>
-            <div style={{ height: '4px', flex: 1, borderRadius: '2px', background: step >= 2 ? '#3b82f6' : '#334155' }}></div>
+          <div className="progress-container">
+             <div className={`progress-dot ${step >= 1 ? "active" : ""}`}></div>
+             <div className={`progress-line ${step >= 2 ? "active" : ""}`}></div>
+             <div className={`progress-dot ${step >= 2 ? "active" : ""}`}></div>
           </div>
         )}
 
         <h2 className="signup-title">
-          {step === 1 ? "Create Account" : step === 2 ? "Select Membership" : "Success! 🎉"}
+            {step === 1 ? "Create Account" : step === 2 ? "Payment Details" : "Success !!"}  
         </h2>
+        
+        {globalError && <div className="error-banner"><AlertCircle size={16}/> {globalError}</div>}
 
-        {errorMessage && <p className="error">{errorMessage}</p>}
-
-        {/* STEP 1: PERSONAL DETAILS */}
+        {/* STEP 1 */}
         {step === 1 && (
           <form onSubmit={handleNext}>
-            <div className="input-group"><input type="text" name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required /></div>
-            <div className="input-group"><input type="email" name="email" placeholder="Email address" value={formData.email} onChange={handleChange} required /></div>
-            <div className="input-group"><input type="text" name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required /></div>
-
+            {/* Name */}
             <div className="input-group">
-              <select name="department" value={formData.department} onChange={handleChange} required>
-                <option value="">Select Department</option>
-                <option value="CSE">CSE</option><option value="ECE">ECE</option><option value="EEE">EEE</option>
-                <option value="ME">ME</option><option value="CE">CE</option>
-              </select>
+              <label>Full Name</label>
+              <input 
+                 type="text" name="name" 
+                 value={formData.name} onChange={handleChange} 
+                 className={errors.name ? "input-error" : ""}
+                 placeholder="As per college records"
+              />
+              {errors.name && <small className="error-text">{errors.name}</small>}
             </div>
 
-            <div className="row-group" style={{ display: 'flex', gap: '10px' }}>
-              <div className="input-group" style={{ flex: 1 }}>
-                <select name="year" value={formData.year} onChange={handleChange} required>
-                  <option value="">Year</option><option value="1st Year">1st</option><option value="2nd Year">2nd</option><option value="3rd Year">3rd</option><option value="4th Year">4th</option>
-                </select>
-              </div>
-              <div className="input-group" style={{ flex: 1 }}>
-                <select name="course" value={formData.course} onChange={handleChange} required>
-                  <option value="">Course</option><option value="B.Tech">B.Tech</option><option value="M.Tech">M.Tech</option>
-                </select>
-              </div>
+            {/* Email */}
+            <div className="input-group">
+              <label>Email</label>
+              <input 
+                 type="email" name="email" 
+                 value={formData.email} onChange={handleChange}
+                 className={errors.email ? "input-error" : ""}
+                 placeholder="Verification link will be sent here"
+              />
+              {errors.email && <small className="error-text">{errors.email}</small>}
             </div>
 
-            <div className="input-group"><input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required /></div>
-            <div className="input-group"><input type="password" name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required /></div>
-
-            <div className="toggle-group">
-              <span className="toggle-label">I belong to Government College of Engineering Kannur</span>
-              <label className="switch">
-                <input type="checkbox" name="college" checked={formData.college} onChange={handleChange} />
-                <span className="slider"></span>
-              </label>
+            {/* Phone */}
+            <div className="input-group">
+              <label>Phone Number 'Whatsapp'</label>
+              <input 
+                 type="tel" name="phone" 
+                 value={formData.phone} onChange={handleChange} maxLength="10"
+                 className={errors.phone ? "input-error" : ""}
+                 placeholder="10-digit Number"
+              />
+              {errors.phone && <small className="error-text">{errors.phone}</small>}
             </div>
 
-            <button type="submit" className="signup-btn">Next <ArrowRight size={18} style={{ marginLeft: '8px' }} /></button>
-            <div className="signup-footer"><span>Already a member?</span><a href="/login"> Log in</a></div>
+            {/* Dept / Year */}
+            <div className="row-group">
+               <select name="department" value={formData.department} onChange={handleChange} required>
+                  <option value="">Department</option>
+                  <option value="CSE">CSE</option><option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option><option value="ME">ME</option><option value="CE">CE</option>
+               </select>
+               <select name="year" value={formData.year} onChange={handleChange} required>
+                  <option value="">Year</option>
+                  <option value="1st Year">1st Year</option><option value="2nd Year">2nd Year</option>
+                  <option value="3rd Year">3rd Year</option><option value="4th Year">4th Year</option>
+               </select>
+               <select name="course" value={formData.course} onChange={handleChange} required>
+                  <option value ="">Course</option>
+                  <option value="B.Tech">B.Tech</option>
+               </select>
+            </div>
+
+            {/* Password */}
+            <div className="password-container">
+               <label>Choose a Strong Password</label>
+               <div className="input-with-icon">
+                  <input type={showPassword ? "text" : "password"} name="password" value={formData.password} onChange={handleChange} placeholder="e.g., MyPass123!" />
+                  <button type="button" onClick={() => setShowPassword(!showPassword)}>
+                     {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                  </button>
+               </div>
+               <div className="strength-meter">
+                  <div className={`bar ${strengthScore >= 2 ? 'active' : ''}`}></div>
+                  <div className={`bar ${strengthScore >= 4 ? 'active' : ''}`}></div>
+                  <div className={`bar ${strengthScore >= 5 ? 'active' : ''}`}></div>
+               </div>
+               <div className="rules-list">
+              <span className={passwordMetrics.length ? "met" : ""}>8+ Chars</span>
+              <span className={passwordMetrics.upper ? "met" : ""}>UpperCase</span>
+              <span className={passwordMetrics.number ? "met" : ""}>Number</span>
+              <span className={passwordMetrics.special ? "met" : ""}>Symbol</span>
+               </div>
+            </div>
+
+            {/* Confirm Password Field */}
+<div className="input-group">
+   <label>Confirm Password</label>
+   <div className="input-with-icon">
+      <input 
+         // Toggle type based on showConfirm state
+         type={showConfirm ? "text" : "password"} 
+         name="confirmPassword" 
+         value={formData.confirmPassword} 
+         onChange={handleChange}
+         className={errors.confirmPassword ? "input-error" : ""}
+      />
+      <button type="button" onClick={() => setShowConfirm(!showConfirm)}>
+         {showConfirm ? <EyeOff size={18}/> : <Eye size={18}/>}
+      </button>
+   </div>
+   {errors.confirmPassword && <small className="error-text">{errors.confirmPassword}</small>}
+</div>
+
+<div className="input-group" style={{marginTop: '10px'}}>
+        <label>College Verification</label>
+        <div style={{
+            display: 'flex', alignItems: 'center', gap: '12px', 
+            padding: '12px', background: 'var(--input-bg)', 
+            border: '1px solid var(--border-dim)', borderRadius: '14px'
+        }}>
+            <input 
+                type="checkbox" 
+                checked={true} 
+                readOnly 
+                style={{ width: '20px', height: '20px', margin: 0, cursor: 'not-allowed' }}
+            />
+            <span style={{ fontSize: '13px', color: 'var(--text-main)', lineHeight: '1.4' }}>
+                I confirm that I am a student of &nbsp;
+                <strong style={{color: 'var(--neon-blue)'}}>Government College of Engineering Kannur</strong>
+            </span>
+        </div>
+    </div>
+
+            <div className="terms-check">
+  <label className="checkbox-container">
+    <input 
+      type="checkbox" 
+      name="termsAccepted" 
+      checked={formData.termsAccepted} 
+      onChange={handleChange} 
+    />
+    <span className="checkmark"></span>
+    <span style={{ fontSize: '12px', lineHeight: '1.5' }}>
+      I have read, understood, and agree to the{' '}
+      <a href="/terms-and-conditions" target="_blank" rel="noopener noreferrer">Terms</a>,{' '}
+      <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy</a>,{' '}
+      <a href="/refund-policy" target="_blank" rel="noopener noreferrer">Refund Policy</a>, and{' '}
+      <a href="/code-of-conduct" target="_blank" rel="noopener noreferrer">Code of Conduct</a>.
+    </span>
+  </label>
+</div>
+
+            <button 
+              type="submit" 
+              className={`signup-btn neon-blue ${!isFormValid ? "disabled" : ""}`} 
+              disabled={!isFormValid || loading}
+            >
+              {loading ? "Checking..." : "Next Step"} <ArrowRight size={18}/>
+            </button>
           </form>
         )}
 
-        {/* STEP 2: PAYMENT & CONFIRMATION */}
+        {/* STEP 2 */}
         {step === 2 && (
-          <form onSubmit={handleSignup}>
-            <div className="payment-box" style={{ background: '#1e293b', padding: '20px', borderRadius: '12px', border: '1px solid #334155' }}>
-
-              <label style={{ color: '#94a3b8', fontSize: '13px' }}>Choose Duration:</label>
-              <select
-                name="duration"
-                value={formData.duration}
-                onChange={handleDurationChange}
-                style={{ width: '100%', padding: '12px', marginTop: '5px', background: '#0f172a', border: '1px solid #3b82f6', color: 'white', borderRadius: '8px' }}
-              >
-                {fees.map((fee) => (
-                  <option key={fee.id} value={fee.years}>{fee.label} - ₹{fee.amount}</option>
-                ))}
-              </select>
-
-              <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                <span style={{ fontSize: '12px', color: '#94a3b8' }}>Amount to Pay</span>
-                <h1 style={{ margin: '5px 0', color: '#34d399', fontSize: '32px' }}>₹{formData.amountToPay}</h1>
+           <form onSubmit={handleSignup}>
+              <div className="duration-grid">
+                  {fees.map(f => (
+                      <div key={f.id} onClick={() => setFormData(p => ({...p, duration: f.years, amountToPay: f.amount, durationLabel: f.label}))} className={`duration-card ${formData.duration === f.years ? 'selected' : ''}`}>
+                          <span>{f.label}</span><strong>₹{f.amount}</strong>
+                      </div>
+                  ))}
               </div>
 
-              {/* --- NEW PAYMENT SECTION --- */}
-              <div style={{ margin: '20px 0', textAlign: 'center' }}>
-                
-                {/* 1. SMART PAYMENT BUTTON (For Mobile) */}
-                <a
-                  href={upiLink}
-                  className="signup-btn"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    textDecoration: 'none',
-                    background: '#10b981', // Green for payment
-                    marginBottom: '15px',
-                    fontWeight: 'bold',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Pay ₹{formData.amountToPay} via UPI App
-                  <ArrowRight size={18} style={{ marginLeft: '8px' }} />
-                </a>
+              {/* --- Updated Payment Display (Step 2) --- */}
+<div className="qr-section">
+    <p className="instruction">
+       {isMobile ? "Scan QR or Tap Button" : "Scan QR to Pay"}
+    </p>
 
-                {/* 2. QR CODE (Backup for Desktop) */}
-                <div style={{ padding: '10px', background: 'white', borderRadius: '10px', display: 'inline-block' }}>
-                  <div style={{ width: '150px', height: '150px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {qrCode ? (
-                      <img src={qrCode} alt="QR Code" style={{ maxWidth: '100%', maxHeight: '100%' }} />
-                    ) : (
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>Loading QR...</span>
-                    )}
-                  </div>
-                  <p style={{ color: '#334155', fontSize: '10px', marginTop: '5px', fontWeight: '600' }}>
-                    Scan to Pay Manually
-                  </p>
-                </div>
-                
-                <p style={{ fontSize: '11px', color: '#94a3b8', marginTop: '10px', fontStyle: 'italic' }}>
-                   Verify ID: {CLUB_UPI_ID}
-                </p>
-              </div>
+    {/* 1. Always show the QR Code (Desktop & Mobile) */}
+    <div className="qr-wrapper" style={{background:'white', padding:'10px', borderRadius:'10px', display:'inline-block'}}>
+        <QRCode value={upiUrl} size={150} />
+    </div>
 
+    {/* 2. Show Button ONLY on Mobile */}
+    {isMobile && (
+        <div style={{marginTop: '15px', width: '100%'}}>
+           <a href={upiUrl} className="upi-button">
+              <Smartphone size={18}/> Pay via UPI App
+           </a>
+           <small className="sub-instruction">
+              (If the button doesn't work, screenshot the QR and scan it from your gallery using your UPI app)
+           </small>
+        </div>
+    )}
+</div>
+              
               <div className="input-group">
-                <input
-                  type="text" name="paymentRef" placeholder="Enter Transaction ID (UTR)"
-                  value={formData.paymentRef} onChange={handleChange} required
-                  style={{ textAlign: 'center', letterSpacing: '1px', borderColor: '#f59e0b' }}
-                />
+                  <label>Transaction ID (UTR)</label>
+                  <input 
+                     type="text" name="paymentRef" 
+                     value={formData.paymentRef} onChange={handleChange} 
+                     placeholder="Enter 12-digit UTR" maxLength={12}
+                  />
+                  {formData.paymentRef.length > 0 && formData.paymentRef.length !== 12 && (
+                   <small className="error-text">
+                           Current length: {formData.paymentRef.length} (Must be 12)
+                      </small>
+                    )}
               </div>
-            </div>
 
-            <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-              <button type="button" onClick={() => setStep(1)} className="signup-btn" style={{ background: '#334155', width: '30%' }}>
-                <ArrowLeft size={18} />
-              </button>
-              <button type="submit" className="signup-btn" style={{ width: '70%' }}>
-                Submit Application
-              </button>
-            </div>
-          </form>
+              <div className="btn-group">
+                  <button type="button" onClick={() => setStep(1)} className="back-btn"><ArrowLeft/></button>
+                  <button type="submit" className="signup-btn neon-green" disabled={loading || formData.paymentRef.length !== 12}>
+                     {loading ? "Submitting..." : "Finish Registration"}
+                  </button>
+              </div>
+           </form>
         )}
 
-        {/* STEP 3: SUCCESS */}
+        {/* STEP 3 */}
         {step === 3 && (
-          <div style={{ textAlign: 'center', padding: '20px' }}>
-            <CheckCircle size={60} color="#34d399" style={{ margin: '0 auto 20px' }} />
-            <h3 style={{ color: 'white' }}>Application Submitted!</h3>
-            <p style={{ color: '#94a3b8', fontSize: '14px', lineHeight: '1.6', marginTop: '10px' }}>
-              1. Check your email to verify your account.<br />
-              2. The Admin will verify your payment ID.<br />
-              3. You can log in once approved.
-            </p>
-            <a href="/login" className="signup-btn" style={{ display: 'block', textDecoration: 'none', marginTop: '30px' }}>Go to Login</a>
-          </div>
+            <div className="success-view">
+                <CheckCircle size={80} color="#34d399"/>
+                <h3>Application Sent!</h3>
+                <p>We've sent a verification email to <strong>{formData.email}</strong>. Please confirm your email address, The admin will approve your membership shortly</p>
+                <a href="/login" className="signup-btn neon-blue">Go to Login</a>
+            </div>
         )}
-
       </div>
     </div>
   );

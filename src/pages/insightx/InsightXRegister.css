@@ -1,0 +1,341 @@
+/* --- Variables (Matches your InsightX Theme) --- */
+:root {
+  --theme-bg-dark: #0a0e17;
+  --theme-primary: #8a2be2;    /* Purple */
+  --theme-secondary: #00bfff;  /* Cyan */
+  --theme-accent: #ff00ff;     /* Magenta */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(0, 0, 0, 0.3);
+  --text-main: #ffffff;
+  --text-muted: #a0aec0;
+  --gradient-primary: linear-gradient(135deg, var(--theme-primary), var(--theme-secondary));
+}
+
+/* --- Main Layout --- */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: radial-gradient(circle at 50% 10%, rgba(138, 43, 226, 0.15), transparent 60%);
+  position: relative;
+  z-index: 10;
+}
+
+/* --- Glass Card --- */
+.register-card {
+  width: 100%;
+  max-width: 600px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- Progress Steps --- */
+.steps-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2.5rem;
+  padding: 0 10%;
+  position: relative;
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--glass-border);
+  margin: 0 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.step-dot {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: var(--theme-bg-dark);
+  border: 2px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--text-muted);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.step-dot.active {
+  border-color: var(--theme-secondary);
+  background: var(--theme-secondary);
+  color: #000;
+  box-shadow: 0 0 15px rgba(0, 191, 255, 0.5);
+}
+
+/* --- Registration Type Toggle --- */
+.reg-type-toggle {
+  display: flex;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 5px;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  border: 1px solid var(--glass-border);
+}
+
+.reg-type-toggle button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.reg-type-toggle button.active {
+  background: var(--theme-primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}
+
+/* --- Form Inputs --- */
+.form-step h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  background: linear-gradient(to right, #fff, #a0aec0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-left: 4px;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  background: var(--input-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--theme-secondary);
+  box-shadow: 0 0 0 3px rgba(0, 191, 255, 0.1);
+}
+
+select option {
+  background-color: var(--theme-bg-dark); /* Fix for dropdown bg on Windows */
+}
+
+/* --- Members List (Step 2) --- */
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px; /* Space for scrollbar */
+}
+
+/* Custom Scrollbar for members list */
+.members-list::-webkit-scrollbar {
+  width: 6px;
+}
+.members-list::-webkit-scrollbar-thumb {
+  background: var(--glass-border);
+  border-radius: 3px;
+}
+
+.member-card {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.2rem;
+}
+
+.member-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.member-header h4 {
+  color: var(--theme-secondary);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.delete-btn {
+  background: rgba(255, 50, 50, 0.1);
+  color: #ff4444;
+  border: none;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 50, 50, 0.2);
+}
+
+.member-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 500px) {
+  .member-inputs { grid-template-columns: 1fr; }
+}
+
+/* --- Action Buttons --- */
+.add-member-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  border: 1px dashed var(--glass-border);
+  color: var(--text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.add-member-btn:hover {
+  border-color: var(--theme-secondary);
+  color: var(--theme-secondary);
+  background: rgba(0, 191, 255, 0.05);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.cta-button {
+  flex: 1;
+  padding: 14px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.2s;
+}
+
+.cta-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+}
+
+.cta-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.secondary-btn {
+  padding: 14px 24px;
+  background: transparent;
+  border: 1px solid var(--glass-border);
+  color: var(--text-muted);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.secondary-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+/* --- Success State --- */
+.success-container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 500px;
+    margin: 0 auto;
+    
+}
+
+.success-container h2 {
+  font-size: 2rem;
+  margin: 1rem 0 0.5rem;
+    color: var(--theme-secondary);
+    font-weight: 700;
+
+}
+
+.success-container p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+/* --- Animations --- */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Spinner Rotate */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

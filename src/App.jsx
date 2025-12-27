@@ -12,6 +12,7 @@ import UpcomingPrograms from './Components/Programs/UpcomingPrograms';
 import EventRegistration from './Components/Programs/EventRegistration';
 import AdminGuard from './Components/Admin/AdminGuard'; 
 
+
 // Pages
 import AboutPage from "./pages/AboutPage";
 import Contact from './pages/Contact/Contact';
@@ -28,6 +29,8 @@ import PrivacyPolicy from './pages/Privacypolicy-page/PrivacyPolicy';
 import RefundPolicy from './pages/Refund-policy-page/RefundPolicy';
 import CodeOfConduct from './pages/Code-of-conduct-page/CodeofConduct';
 import JoinInfo from './pages/Join-us-page/JoinInfo';
+import InsightXLanding from './pages/InsightX/InsightX';
+import InsightXRegister from './pages/insightx/InsightXRegister';
 import './index.css';
 
 const ScrollToTop = () => {
@@ -61,6 +64,8 @@ const App = () => {
           <Route path="/refund-policy" element={<RefundPolicy />} />
           <Route path="/code-of-conduct" element={<CodeOfConduct />} />
           <Route path="/join-us" element={<JoinInfo />} />
+          <Route path="/insightx" element={<InsightXLanding />} />
+          <Route path="/insightx-register" element={<InsightXRegister />} />
           
           {/* --- 2. AUTH ROUTES (Login/Signup) --- */}
           <Route path="/login" element={<Login />} />

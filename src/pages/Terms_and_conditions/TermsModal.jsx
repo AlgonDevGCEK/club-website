@@ -1,14 +1,17 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft , FileText ,X} from 'lucide-react';
 import './TermsModal.css';
 
 const TermsModal = () => {
   const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    // Navigate back to JoinInfo with hash
-    navigate('/join-us#policy-review', { replace: false });
+  const handleBack = () => {
+    // Check if there is history to go back to
+    if (window.history.length > 2) {
+      navigate(-1); // Go back if history exists
+    } else {
+      window.close(); // Close tab if it's a new window
+    }
   };
 
   return (
@@ -16,11 +19,16 @@ const TermsModal = () => {
       <div className="terms-container">
         {/* Navigation Header */}
         <header className="terms-header">
-          <button className="back-link" onClick={handleBackClick}>
-            <ArrowLeft size={18} /> Back
+          <button className="back-link" onClick={handleBack}>
+             {/* Visual Trick: Show 'X' if it's likely a new tab, 'Arrow' if it's history */}
+             {window.history.length > 2 ? (
+                <><ArrowLeft size={18} /> Back</>
+             ) : (
+                <><X size={20} /> Close</>
+             )}
           </button>
           <div className="header-info">
-            <h1>Terms & Conditions <FileText size={28} color="#3b82f6" /></h1>
+            <h1>Terms & Conditions &nbsp;<FileText size={28} color="#3b82f6" /></h1>
             <p>ALGON DC GCEK • Last updated: Dec 26, 2025</p>
           </div>
         </header>
