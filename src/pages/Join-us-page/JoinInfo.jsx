@@ -1,22 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Rocket, Users, Zap, Award, ArrowRight, ShieldAlert, Loader2, CheckCircle2 , Github ,Crown,Globe,TrendingUp } from 'lucide-react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { 
+  Rocket, Users, Zap, Award, ArrowRight, 
+  ShieldAlert, Loader2, CheckCircle2 
+} from 'lucide-react';
 import { supabase } from '../../supabaseClient'; 
 import './JoinInfo.css';
 
 const JoinInfo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
   const [fees, setFees] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const policyReviewRef = useRef(null);
 
-  // Fetch ALL membership options
+  // --- 1. NUCLEAR SCROLL FIX FOR MOBILE ---
+  useLayoutEffect(() => {
+    // A. Disable the browser's default "remember scroll" behavior
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    // B. The Logic
+    const handleScroll = () => {
+      // Check if we strictly NEED to go to the policy section
+      const shouldScrollToPolicy = location.hash === '#policy-review' || location.state?.scrollToPolicy;
+
+      if (!loading && shouldScrollToPolicy && policyReviewRef.current) {
+         policyReviewRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+         // FOR EVERYONE ELSE: FORCE TOP
+         window.scrollTo(0, 0);
+      }
+    };
+
+    // C. Execute immediately
+    handleScroll();
+
+    // D. Execute AGAIN after a tiny delay (Fixes Mobile Browsers ignoring the first command)
+    const timer = setTimeout(() => {
+        handleScroll();
+    }, 10);
+
+    return () => clearTimeout(timer);
+
+  }, [location.pathname, location.hash, loading]); 
+
+  // --- 2. Fetch Data ---
   useEffect(() => {
     const fetchFees = async () => {
       try {
         const { data, error } = await supabase
           .from('membership_fees')
           .select('*')
-          .order('amount', { ascending: true }); // Sort by price 
+          .order('amount', { ascending: true });
 
         if (error) throw error;
         setFees(data || []);
@@ -38,14 +77,13 @@ const JoinInfo = () => {
         <section className="join-hero animate-fade-in">
           <h1>Start Your Journey with </h1>
           <div className='logo-heading'>
-          <h1><span className="highlight">ALGON DC</span></h1>
-          <h1><span className="highlight">GCEK</span></h1>
+            <h1><span className="highlight">ALGON DC</span></h1>
+            <h1><span className="highlight">GCEK</span></h1>
           </div>
-          
           <p>Join the community of innovators, developers, and future tech leaders at GCEK.</p>
         </section>
 
-        {/* 2. Why Join Us? (Benefits) */}
+        {/* 2. Benefits Grid */}
         <section className="benefits-grid">
           <div className="benefit-card delay-5">
             <div className="icon-box blue"><Rocket size={28} /></div>
@@ -74,11 +112,11 @@ const JoinInfo = () => {
           <h2>Membership Plans</h2>
           <p className="section-subtitle">Choose the plan that fits your academic journey</p>
           
-          <div className="fee-grid-container">
+          <div className="fee-grid-container" style={{ minHeight: '400px' }}>
             {loading ? (
-              <div className="loading-state">
+              <div className="loading-state" style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
                 <Loader2 className="spinner" size={40} color="#3b82f6" />
-                <p>Loading plans...</p>
+                <p style={{ marginTop: '15px', color: '#94a3b8' }}>Loading plans...</p>
               </div>
             ) : (
               fees.map((plan) => (
@@ -106,8 +144,12 @@ const JoinInfo = () => {
           </div>
         </section>
 
-        {/* 4. Policy Review (Updated Navigation) */}
-        <section className="policy-review animate-slide-up">
+        {/* 4. Policy Review */}
+        <section 
+           className="policy-review animate-slide-up" 
+           id="policy-review"
+           ref={policyReviewRef}
+        >
           <div className="policy-alert">
             <h1><ShieldAlert size={60} color="#1ae917ff" /></h1>
             <h3>Before you register, please review our community guidelines.</h3>
@@ -115,7 +157,6 @@ const JoinInfo = () => {
           <p>We value transparency. Please read the policies below to understand your rights and responsibilities.</p>
           
           <div className="policy-links">
-            {/* Updated to use navigate() instead of anchor tags */}
             <button onClick={() => navigate('/terms-and-conditions')} className="policy-btn">Terms & Conditions</button>
             <button onClick={() => navigate('/privacy-policy')} className="policy-btn">Privacy Policy</button>
             <button onClick={() => navigate('/refund-policy')} className="policy-btn">Refund Policy</button>
