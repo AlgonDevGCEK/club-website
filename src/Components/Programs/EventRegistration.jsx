@@ -59,20 +59,20 @@ const EventRegistration = () => {
         setCurrentUser(session.user);
         setIsMember(true);
         
-        // Check Duplicate Registration for this User
-        const { data: existingReg } = await supabase
-            .from('registrations')
-            .select('id')
-            .eq('event_id', id)
-            .eq('user_id', session.user.id);
-        
-        if (existingReg && existingReg.length > 0) {
+        // 🔒 NEW: Check Duplicates using Secure RPC (No RLS needed)
+        const { data: isDup } = await supabase.rpc('check_duplicate_registration', {
+            check_event_id: id,
+            check_email: session.user.email,
+            check_user_id: session.user.id
+        });
+
+        if (isDup === true) {
             setAlreadyRegistered(true);
             setLoading(false);
-            return; // Stop here if already registered
+            return; // Stop here
         }
 
-        // Fetch Profile Data (Only if not loaded from local storage)
+        // Fetch Profile Data...
         if (!savedData) {
             const { data: memberData } = await supabase
             .from('members').select('*').eq('user_id', session.user.id).maybeSingle();
@@ -115,15 +115,21 @@ const EventRegistration = () => {
   const handleNextAction = async () => {
     // Extra Duplicate Check for Guests (by Email) before proceeding
     if (!isMember) {
-        const { data: existingEmail } = await supabase
-            .from('registrations')
-            .select('id')
-            .eq('event_id', id)
-            .eq('email', formData.email);
-        
-        if (existingEmail && existingEmail.length > 0) {
+        // 👇 FIXED: Use RPC instead of direct select to bypass RLS issues
+        const { data: isDup, error } = await supabase.rpc('check_duplicate_registration', {
+            check_event_id: id,
+            check_email: formData.email,
+            check_user_id: null 
+        });
+
+        if (error) {
+            console.error("Duplicate check failed:", error);
+            
+        }
+
+        if (isDup === true) {
             alert("This email is already registered for this event.");
-            return;
+            return; 
         }
     }
 
@@ -167,18 +173,22 @@ const EventRegistration = () => {
 
   if (loading) return <div className="loading-screen">Loading details...</div>;
 
-  // --- ALREADY REGISTERED SCREEN ---
   if (alreadyRegistered) return (
       <div className="reg-page-wrapper">
-          <div className="success-card animate-scale-in">
-             <div className="success-icon" style={{background: 'rgba(239, 68, 68, 0.1)'}}>
-                <Ban size={60} color="#ef4444" />
+          <div className="status-card error-glow animate-scale-in">
+             <div className="status-icon-wrapper red-theme">
+                <Ban size={48} />
              </div>
-             <h2>Already Registered!</h2>
-             <p>You have already submitted your registration for <strong>{event?.title}</strong>.</p>
-             <button onClick={() => navigate('/upcoming-programs')} className="secondary-btn">
-                Back to Events
-             </button>
+             <h2>Already Registered</h2>
+             <p>
+                You have already submitted your details for <br/>
+                <span className="highlight-event">{event?.title}</span>
+             </p>
+             <div className="status-actions">
+                <button onClick={() => navigate('/upcoming-programs')} className="primary-action-btn">
+                    Back to Events
+                </button>
+             </div>
           </div>
       </div>
   );
@@ -233,7 +243,6 @@ const EventRegistration = () => {
                     <h3>Complete Payment</h3>
                     <p className="pay-instruction">Scan to pay <strong>₹{event.fee_amount}</strong></p>
                     
-                    
                     <div className="qr-box-black">
                         <QRCode 
                             value={upiUrl} 
@@ -244,7 +253,6 @@ const EventRegistration = () => {
                         />
                     </div>
 
-                    {/* Both QR and Button visible on Mobile */}
                     <div className="mobile-pay-options">
                          <a href={upiUrl} className="upi-app-btn">
                              <Smartphone size={18}/> Pay via UPI App
@@ -269,7 +277,7 @@ const EventRegistration = () => {
 
                     <button 
                         onClick={handleFinalSubmit} 
-                        className="submit-reg-btn"
+                        className="verify-btn"
                         disabled={formData.paymentRef.length !== 12}
                     >
                         Submit Verification <Send size={18} />
