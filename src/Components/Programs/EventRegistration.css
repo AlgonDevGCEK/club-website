@@ -160,6 +160,56 @@
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+/* --- Payment Section Styles --- */
+.fee-badge {
+  background: #22c55e;
+  color: #000;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.payment-section {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.pay-instruction {
+  color: #94a3b8;
+  margin-bottom: 20px;
+}
+
+.qr-box {
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Mobile UPI Button */
+.upi-app-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #3b82f6; /* Blue */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+/* UTR Input specific override */
+.payment-section input {
+  text-align: center;
+  font-family: monospace;
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
 /* --- BUTTONS --- */
 .review-btn {
   width: 100%;
@@ -256,6 +306,8 @@
   border-radius: 10px;
   padding: 12px;
   font-weight: 600;
+  padding-left: 130px;
+  padding-right: 135px;
   font-size: 1rem;
   cursor: pointer;
   display: flex;
@@ -319,7 +371,7 @@
 
 .secondary-btn {
   margin-top: 25px;
-  margin-left: -10px;
+  margin-left: 0px;
   background: transparent;
   color: #94a3b8;
   border: none;
@@ -340,6 +392,23 @@
 
 .animate-scale-in {
   animation: scaleIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* --- QR Black Box --- */
+.qr-box-black {
+  background: #000000;
+  padding: 20px;
+  border-radius: 16px;
+  display: inline-block;
+  margin: 15px 0;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  border: 1px solid #333;
+}
+
+/* Mobile Layout Fix */
+.mobile-pay-options {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
 }
 
 @keyframes fadeIn {
@@ -406,6 +475,9 @@
   .secondary-btn {
     padding: 15px; /* Easier to tap link */
     display: block;
-    margin-left: 75px;
+    margin-left: 90px;
+  }
+  .qr-box-black {
+    padding: 15px; /* Slightly smaller on mobile */
   }
 }
