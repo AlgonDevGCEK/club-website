@@ -304,6 +304,12 @@ const Signup = () => {
                   <div className={`bar ${strengthScore >= 4 ? 'active' : ''}`}></div>
                   <div className={`bar ${strengthScore >= 5 ? 'active' : ''}`}></div>
                </div>
+               <div className="rules-list">
+              <span className={passwordMetrics.length ? "met" : ""}>8+ Chars</span>
+              <span className={passwordMetrics.upper ? "met" : ""}>UpperCase</span>
+              <span className={passwordMetrics.number ? "met" : ""}>Number</span>
+              <span className={passwordMetrics.special ? "met" : ""}>Symbol</span>
+               </div>
             </div>
 
             {/* Confirm Password Field */}
