@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { supabase } from "../../supabaseClient";
 import { ArrowLeft } from "lucide-react"; // Optional: Adds a nice back icon
 import { useNavigate } from "react-router-dom";
-import "./ForgotPassword.css";
+import "./Forgotpassword.css";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");

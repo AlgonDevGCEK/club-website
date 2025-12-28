@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { supabase } from "../../supabaseClient";
 import { Eye, EyeOff } from "lucide-react";
-import "./UpdatePassword.css";
+import "./Updatepassword.css";
 
 const UpdatePassword = () => {
   const [newPassword, setNewPassword] = useState("");
