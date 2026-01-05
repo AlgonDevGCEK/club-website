@@ -49,6 +49,52 @@ nav ul li a:not(.nav-admin-link):not(.btn):hover::after {
   width: 100%; 
 }
 
+/* InsightX Highlighted Text */
+.nav-item-highlight {
+  font-weight: 900 !important; /* Extra Bold */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+  
+  /* Gradient Text Effect */
+  background: linear-gradient(90deg, #c084fc, #6366f1, #38bdf8); /* Purple -> Indigo -> Blue */
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  
+  /* Text Glow */
+  filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.4));
+  animation: shine 4s linear infinite;
+}
+
+/* Hover Effect */
+.nav-item-highlight:hover {
+  filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.6)); /* Blue Glow */
+  transform: scale(1.05);
+}
+
+/* Rocket Animation on Hover */
+.nav-item-highlight:hover .nav-icon-animate {
+  transform: translate(2px, -2px);
+  display: inline-block;
+}
+
+.nav-icon-animate {
+  transition: transform 0.3s ease;
+  -webkit-text-fill-color: initial; /* Ensures emoji stays colored */
+  filter: none;
+}
+
+/* Animation for the gradient flow */
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
 /* Active State (React Router adds 'active' class automatically) */
 nav ul li a.active:not(.nav-admin-link):not(.btn) {
   color: #4b90c4;
