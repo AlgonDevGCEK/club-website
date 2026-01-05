@@ -28,6 +28,10 @@ import PrivacyPolicy from './pages/Privacypolicy-page/PrivacyPolicy';
 import RefundPolicy from './pages/Refund-policy-page/RefundPolicy';
 import CodeOfConduct from './pages/Code-of-conduct-page/CodeofConduct';
 import JoinInfo from './pages/Join-us-page/JoinInfo';
+// InsightX pages
+import InsightXLanding from './pages/insightx/insightx';
+import InsightXRegister from './pages/insightx/InsightXRegister';
+import Leaderboard from './pages/insightx/Leaderboard';
 import './index.css';
 
 const ScrollToTop = () => {
