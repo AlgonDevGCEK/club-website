@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabaseClient';
-import { Users, ArrowRight, CheckCircle, Plus, Trash2, Loader2, User } from 'lucide-react';
+import { ArrowRight, CheckCircle, Plus, Trash2, Loader2, AlertCircle } from 'lucide-react';
 import './InsightXRegister.css'; 
 
 const InsightXRegister = () => {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [checkingName, setCheckingName] = useState(false);
+  const [nameError, setNameError] = useState('');
   const [success, setSuccess] = useState(false);
+  
   const [teamName, setTeamName] = useState('');
 
-  // We start with 1 member (The Leader)
-  // We will separate Leader from Members for the DB, but keep them in one array for the UI
+  // --- 1. DEFAULT MEMBERS STATE (Leader + 1 Member) ---
+  // "A team min size is 4" logic note:
+  // If you strictly require 4 people, change the initial state below to have 4 objects.
+  // Currently set to 2 slots as per your "default two members slot" instruction.
   const [members, setMembers] = useState([
-    { fullName: '', email: '', phone: '', role: 'Leader' } 
+    { fullName: '', email: '', phone: '', role: 'Leader' }, // Slot 1 (Leader)
+    { fullName: '', email: '', phone: '', role: 'Member' }  // Slot 2 (Default Member)
   ]);
 
   // --- ACTIONS ---
@@ -24,7 +30,7 @@ const InsightXRegister = () => {
     setMembers(updatedMembers);
   };
 
-  // Add New Member (Max 4 Total)
+  // Add New Member (Max 4)
   const addMember = () => {
     if (members.length < 4) {
       setMembers([
@@ -34,32 +40,81 @@ const InsightXRegister = () => {
     }
   };
 
-  // Remove Member
+  // Remove Member (Min 2)
   const removeMember = (index) => {
-    if (index === 0) return; // Cannot remove leader
+    // Prevent removing Leader (0) or if it drops below 2 members
+    if (index === 0) return;
+    if (members.length <= 2) {
+      alert("Minimum team size is 2 members (Leader + 1).");
+      return;
+    }
     const updatedMembers = members.filter((_, i) => i !== index);
     setMembers(updatedMembers);
   };
 
-  // --- VALIDATION ---
+  // --- VALIDATION & CHECKS ---
+
+  // Check Team Name Availability (Backend Call)
+  const checkNameAvailability = async () => {
+    if (!teamName.trim()) {
+      setNameError("Please enter a team name.");
+      return false;
+    }
+
+    setCheckingName(true);
+    setNameError(""); // Clear prev errors
+
+    try {
+      // Call our new SQL function
+      const { data: isTaken, error } = await supabase
+        .rpc('check_team_name_taken', { p_name: teamName.trim() });
+
+      if (error) throw error;
+
+      if (isTaken) {
+        setNameError("🚫 This team name is already taken. Be creative!");
+        return false;
+      }
+      
+      return true; // Available!
+
+    } catch (err) {
+      console.error("Check Error", err);
+      setNameError("Connection error. Please try again.");
+      return false;
+    } finally {
+      setCheckingName(false);
+    }
+  };
+
+  // Step 1 -> Step 2 Transition Handler
+  const handleNextStep = async () => {
+    const isAvailable = await checkNameAvailability();
+    if (isAvailable) {
+      setStep(2);
+    }
+  };
+
   const validateForm = () => {
-    if (!teamName.trim()) return "Team Name is required.";
-    
+    // 1. Members Validation
     for (const m of members) {
       if (!m.fullName || !m.email || !m.phone) {
-        return "All fields (Name, Email, Phone) are required for all members.";
+        return "All member details (Name, Email, Phone) are required.";
       }
+      // Basic Email Regex
       if (!/\S+@\S+\.\S+/.test(m.email)) return `Invalid email for ${m.fullName}`;
-      if (m.phone.length < 10) return `Phone number for ${m.fullName} must be valid`;
+      // Basic Phone Length
+      if (m.phone.length < 10) return `Phone number for ${m.fullName} seems invalid.`;
     }
     
-    const emails = members.map(m => m.email);
-    if (new Set(emails).size !== emails.length) return "Duplicate emails found.";
+    // 2. Duplicate Check
+    const emails = members.map(m => m.email.toLowerCase());
+    if (new Set(emails).size !== emails.length) return "Duplicate email addresses found in the team.";
 
     return null;
   };
 
-  // --- BACKEND SUBMISSION ---
+  // --- FINAL SUBMISSION ---
   const handleSubmit = async () => {
     const errorMsg = validateForm();
     if (errorMsg) {
@@ -69,23 +124,25 @@ const InsightXRegister = () => {
 
     setLoading(true);
     try {
-      // 1. Separate Leader from other members
       const leader = members[0];
-      const otherMembers = members.slice(1); // Array of the rest
+      const otherMembers = members.slice(1);
 
-      // 2. Insert into 'insightx_teams'
+      // Double check name uniqueness one last time before insert
+      // (Just in case someone else took it while they were filling the form)
       const { error } = await supabase
         .from('insightx_teams')
         .insert([{
-          team_name: teamName,
+          team_name: teamName.trim(),
           leader_name: leader.fullName,
           leader_email: leader.email,
           leader_phone: leader.phone,
-          members: otherMembers // Stores the rest as JSON
+          members: otherMembers,
+          total_score: 0
         }]);
 
       if (error) {
-        if (error.code === '23505') throw new Error("Team Name already exists! Please choose another.");
+        // Handle unique constraint violation specifically
+        if (error.code === '23505') throw new Error("Team Name was just taken! Please go back and change it.");
         throw error;
       }
 
@@ -93,21 +150,24 @@ const InsightXRegister = () => {
 
     } catch (error) {
       console.error("Registration Error:", error);
-      alert("Registration failed: " + error.message);
+      alert("Registration Failed: " + error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  // --- RENDER SUCCESS ---
+  // --- SUCCESS VIEW ---
   if (success) {
     return (
       <div className="register-container">
-        <div className="success-container glass-card text-center">
+        <div className="success-container glass-card">
           <CheckCircle size={64} className="text-green-500 mb-4 mx-auto" />
-          <h2>Registration Successful!</h2>
-          <p>Your team <strong>{teamName}</strong> is ready for battle.</p>
-          <p className="text-muted">Remember your Team Name. You will need it to submit your projects.</p>
+          <h2>Squad Registered!</h2>
+          <p><strong>{teamName}</strong> is now live on the system.</p>
+          <div className="warning-box mt-4">
+            IMPORTANT: Your Team Name is your <strong>Submission Key</strong>. 
+            Do not forget it.
+          </div>
           <button onClick={() => window.location.href='/insightx'} className="cta-button mt-4">
             Go to Event Page
           </button>
@@ -127,27 +187,37 @@ const InsightXRegister = () => {
           <div className={`step-dot ${step >= 2 ? 'active' : ''}`}>2</div>
         </div>
 
-        {/* STEP 1: TEAM NAME */}
+        {/* STEP 1: TEAM NAME & CHECK */}
         {step === 1 && (
           <div className="form-step animate-fade-in">
-            <h2>Team Registration</h2>
-            <p className="text-muted-sm">Create a unique identity for your squad.</p>
+            <h2>Create Your Identity</h2>
+            <p className="text-muted-sm">Choose a unique team name. This will be your login key.</p>
             
             <div className="form-group mt-4">
               <label>Team Name</label>
               <input 
                 value={teamName} 
-                onChange={(e) => setTeamName(e.target.value)} 
-                placeholder="e.g. Code Warriors" 
-                className="input-field"
+                onChange={(e) => {
+                  setTeamName(e.target.value);
+                  setNameError(''); // Clear error on type
+                }} 
+                placeholder="e.g. Null Pointers" 
+                className={`input-field ${nameError ? 'error-border' : ''}`}
+                onKeyDown={(e) => e.key === 'Enter' && handleNextStep()}
               />
+              
+              {/* Error / Status Message */}
+              {nameError && (
+                <div className="error-msg">
+                  <AlertCircle size={16} /> {nameError}
+                </div>
+              )}
             </div>
 
-            <button className="cta-button w-full mt-4" onClick={() => {
-              if(!teamName.trim()) alert("Please enter a team name");
-              else setStep(2);
-            }}>
-              Next Step <ArrowRight size={18} />
+            <button className="cta-button w-full mt-4" onClick={handleNextStep} disabled={checkingName}>
+              {checkingName ? <Loader2 className="spinner" /> : (
+                <>Next Step <ArrowRight size={18} /></>
+              )}
             </button>
           </div>
         )}
@@ -155,8 +225,8 @@ const InsightXRegister = () => {
         {/* STEP 2: MEMBER DETAILS */}
         {step === 2 && (
           <div className="form-step animate-fade-in">
-            <h2>Team Members</h2>
-            <p className="text-muted-sm">Add up to 4 members. The first member is the Leader.</p>
+            <h2>Squad Roster</h2>
+            <p className="text-muted-sm">Fill in details for all {members.length} members.</p>
             
             <div className="members-list">
               {members.map((member, index) => (
@@ -165,7 +235,8 @@ const InsightXRegister = () => {
                     <h4>
                       {index === 0 ? <span className="leader-badge">👑 Team Leader</span> : `Member ${index + 1}`}
                     </h4>
-                    {index > 0 && (
+                    {/* Only show delete if it's NOT the leader AND we have more than 2 members */}
+                    {index > 0 && members.length > 2 && (
                       <button className="delete-btn" onClick={() => removeMember(index)}>
                         <Trash2 size={16} />
                       </button>
@@ -195,6 +266,7 @@ const InsightXRegister = () => {
               ))}
             </div>
 
+            {/* Add Member Button (Max 4) */}
             {members.length < 4 && (
               <button className="add-member-btn" onClick={addMember}>
                 <Plus size={18} /> Add Team Member
