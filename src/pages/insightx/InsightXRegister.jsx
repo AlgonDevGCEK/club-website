@@ -11,11 +11,6 @@ const InsightXRegister = () => {
   const [success, setSuccess] = useState(false);
   
   const [teamName, setTeamName] = useState('');
-
-  // --- 1. DEFAULT MEMBERS STATE (Leader + 1 Member) ---
-  // "A team min size is 4" logic note:
-  // If you strictly require 4 people, change the initial state below to have 4 objects.
-  // Currently set to 2 slots as per your "default two members slot" instruction.
   const [members, setMembers] = useState([
     { fullName: '', email: '', phone: '', role: 'Leader' }, // Slot 1 (Leader)
     { fullName: '', email: '', phone: '', role: 'Member' }  // Slot 2 (Default Member)
@@ -72,7 +67,7 @@ const InsightXRegister = () => {
       if (error) throw error;
 
       if (isTaken) {
-        setNameError("🚫 This team name is already taken. Be creative!");
+        setNameError(" This team name is already taken. Be creative!");
         return false;
       }
       
