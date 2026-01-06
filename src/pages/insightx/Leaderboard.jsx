@@ -15,11 +15,7 @@ const Leaderboard = () => {
 
   const fetchLeaderboard = async () => {
     try {
-      // Fetch data from the View we created
-      const { data, error } = await supabase
-        .from("insightx_leaderboard_view")
-        .select("*");
-      
+      const { data, error } = await supabase.rpc("get_leaderboard");
       if (error) throw error;
       setTeams(data);
     } catch (error) {
