@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { supabase } from '../../supabaseClient';
-import { ArrowRight, CheckCircle, Plus, Trash2, Loader2, AlertCircle } from 'lucide-react';
+import { 
+  ArrowRight, CheckCircle, Plus, Trash2, Loader2, AlertCircle, MessageCircle 
+} from 'lucide-react';
 import './InsightXRegister.css'; 
+
+// --- CONSTANTS ---
+const BRANCHES = ["CSE", "ECE", "EEE", "ME", "CE"];
+const YEARS = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 
 const InsightXRegister = () => {
   const [step, setStep] = useState(1);
@@ -11,34 +17,35 @@ const InsightXRegister = () => {
   const [success, setSuccess] = useState(false);
   
   const [teamName, setTeamName] = useState('');
+
+  // --- STATE INITIALIZATION ---
+  // Slot 1: Leader (Has Email & Phone)
+  // Slot 2: Member (No Email required, Phone optional/removed based on pref)
   const [members, setMembers] = useState([
-    { fullName: '', email: '', phone: '', role: 'Leader' }, // Slot 1 (Leader)
-    { fullName: '', email: '', phone: '', role: 'Member' }  // Slot 2 (Default Member)
+    { fullName: '', email: '', phone: '', branch: 'CSE', year: '1st Year', role: 'Leader' }, 
+    { fullName: '', branch: 'CSE', year: '1st Year', role: 'Member' } 
   ]);
 
   // --- ACTIONS ---
 
-  // Handle Member Change
   const handleMemberChange = (index, field, value) => {
     const updatedMembers = [...members];
     updatedMembers[index][field] = value;
     setMembers(updatedMembers);
   };
 
-  // Add New Member (Max 4)
   const addMember = () => {
     if (members.length < 4) {
       setMembers([
         ...members, 
-        { fullName: '', email: '', phone: '', role: 'Member' }
+        // New members don't need email/phone, just academic info
+        { fullName: '', branch: 'CSE', year: '1st Year', role: 'Member' }
       ]);
     }
   };
 
-  // Remove Member (Min 2)
   const removeMember = (index) => {
-    // Prevent removing Leader (0) or if it drops below 2 members
-    if (index === 0) return;
+    if (index === 0) return; 
     if (members.length <= 2) {
       alert("Minimum team size is 2 members (Leader + 1).");
       return;
@@ -49,30 +56,25 @@ const InsightXRegister = () => {
 
   // --- VALIDATION & CHECKS ---
 
-  // Check Team Name Availability (Backend Call)
   const checkNameAvailability = async () => {
     if (!teamName.trim()) {
       setNameError("Please enter a team name.");
       return false;
     }
-
     setCheckingName(true);
-    setNameError(""); // Clear prev errors
+    setNameError(""); 
 
     try {
-      // Call our new SQL function
       const { data: isTaken, error } = await supabase
         .rpc('check_team_name_taken', { p_name: teamName.trim() });
 
       if (error) throw error;
 
       if (isTaken) {
-        setNameError(" This team name is already taken. Be creative!");
+        setNameError("This team name is already taken. Be creative!");
         return false;
       }
-      
-      return true; // Available!
-
+      return true;
     } catch (err) {
       console.error("Check Error", err);
       setNameError("Connection error. Please try again.");
@@ -82,34 +84,29 @@ const InsightXRegister = () => {
     }
   };
 
-  // Step 1 -> Step 2 Transition Handler
   const handleNextStep = async () => {
     const isAvailable = await checkNameAvailability();
-    if (isAvailable) {
-      setStep(2);
-    }
+    if (isAvailable) setStep(2);
   };
 
   const validateForm = () => {
-    // 1. Members Validation
-    for (const m of members) {
-      if (!m.fullName || !m.email || !m.phone) {
-        return "All member details (Name, Email, Phone) are required.";
+    for (const [index, m] of members.entries()) {
+      // 1. Common checks
+      if (!m.fullName || !m.branch || !m.year) {
+        return `Name, Branch, and Year are required for ${m.role} (${index + 1})`;
       }
-      // Basic Email Regex
-      if (!/\S+@\S+\.\S+/.test(m.email)) return `Invalid email for ${m.fullName}`;
-      // Basic Phone Length
-      if (m.phone.length < 10) return `Phone number for ${m.fullName} seems invalid.`;
-    }
-    
-    // 2. Duplicate Check
-    const emails = members.map(m => m.email.toLowerCase());
-    if (new Set(emails).size !== emails.length) return "Duplicate email addresses found in the team.";
 
+      // 2. Leader Specific Checks
+      if (index === 0) {
+        if (!m.email || !m.phone) return "Leader Email and Phone are required.";
+        if (!/\S+@\S+\.\S+/.test(m.email)) return "Invalid Leader Email.";
+        if (m.phone.length < 10) return "Invalid Leader Phone Number.";
+      }
+    }
     return null;
   };
 
-  // --- FINAL SUBMISSION ---
+  // --- SUBMISSION ---
   const handleSubmit = async () => {
     const errorMsg = validateForm();
     if (errorMsg) {
@@ -120,24 +117,28 @@ const InsightXRegister = () => {
     setLoading(true);
     try {
       const leader = members[0];
-      const otherMembers = members.slice(1);
+      const otherMembers = members.slice(1); // Rest of the team
 
-      // Double check name uniqueness one last time before insert
-      // (Just in case someone else took it while they were filling the form)
       const { error } = await supabase
         .from('insightx_teams')
         .insert([{
           team_name: teamName.trim(),
+          
+          // Leader Details (Top Level Columns)
           leader_name: leader.fullName,
           leader_email: leader.email,
           leader_phone: leader.phone,
-          members: otherMembers,
+          leader_branch: leader.branch,
+          leader_year: leader.year,
+          
+          // Other Members (JSONB)
+          members: otherMembers, 
+          
           total_score: 0
         }]);
 
       if (error) {
-        // Handle unique constraint violation specifically
-        if (error.code === '23505') throw new Error("Team Name was just taken! Please go back and change it.");
+        if (error.code === '23505') throw new Error("Team Name taken! Please go back and change it.");
         throw error;
       }
 
@@ -158,11 +159,22 @@ const InsightXRegister = () => {
         <div className="success-container glass-card">
           <CheckCircle size={64} className="text-green-500 mb-4 mx-auto" />
           <h2>Squad Registered!</h2>
-          <p><strong>{teamName}</strong> is now live on the system.</p>
+          <p><strong>{teamName}</strong> is ready for battle.</p>
+          
+          {/* WhatsApp Group Button */}
+          <a 
+            href="https://chat.whatsapp.com/Dc6dyXFlrhuKTNJuO3KEan" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="whatsapp-btn"
+          >
+            <MessageCircle size={20} /> Join WhatsApp Group
+          </a>
+
           <div className="warning-box mt-4">
-            IMPORTANT: Your Team Name is your <strong>Submission Key</strong>. 
-            Do not forget it.
+             IMPORTANT: Your Team Name is your <strong>Submission Key</strong>.
           </div>
+          
           <button onClick={() => window.location.href='/insightx'} className="cta-button mt-4">
             Go to Event Page
           </button>
@@ -182,11 +194,11 @@ const InsightXRegister = () => {
           <div className={`step-dot ${step >= 2 ? 'active' : ''}`}>2</div>
         </div>
 
-        {/* STEP 1: TEAM NAME & CHECK */}
+        {/* STEP 1: TEAM NAME */}
         {step === 1 && (
           <div className="form-step animate-fade-in">
-            <h2>Create Your Identity</h2>
-            <p className="text-muted-sm">Choose a unique team name. This will be your login key.</p>
+            <h2>Create Identity</h2>
+            <p className="text-muted-sm">Choose a unique team name.</p>
             
             <div className="form-group mt-4">
               <label>Team Name</label>
@@ -194,18 +206,14 @@ const InsightXRegister = () => {
                 value={teamName} 
                 onChange={(e) => {
                   setTeamName(e.target.value);
-                  setNameError(''); // Clear error on type
+                  setNameError('');
                 }} 
                 placeholder="e.g. Null Pointers" 
                 className={`input-field ${nameError ? 'error-border' : ''}`}
                 onKeyDown={(e) => e.key === 'Enter' && handleNextStep()}
               />
-              
-              {/* Error / Status Message */}
               {nameError && (
-                <div className="error-msg">
-                  <AlertCircle size={16} /> {nameError}
-                </div>
+                <div className="error-msg"><AlertCircle size={16} /> {nameError}</div>
               )}
             </div>
 
@@ -220,8 +228,8 @@ const InsightXRegister = () => {
         {/* STEP 2: MEMBER DETAILS */}
         {step === 2 && (
           <div className="form-step animate-fade-in">
-            <h2>Squad Roster</h2>
-            <p className="text-muted-sm">Fill in details for all {members.length} members.</p>
+            <h2>Squad Details</h2>
+            <p className="text-muted-sm">Enter academic details for all members.</p>
             
             <div className="members-list">
               {members.map((member, index) => (
@@ -230,7 +238,6 @@ const InsightXRegister = () => {
                     <h4>
                       {index === 0 ? <span className="leader-badge">👑 Team Leader</span> : `Member ${index + 1}`}
                     </h4>
-                    {/* Only show delete if it's NOT the leader AND we have more than 2 members */}
                     {index > 0 && members.length > 2 && (
                       <button className="delete-btn" onClick={() => removeMember(index)}>
                         <Trash2 size={16} />
@@ -238,30 +245,53 @@ const InsightXRegister = () => {
                     )}
                   </div>
                   
-                  <div className="member-inputs">
-                    <input 
-                      placeholder="Full Name" 
-                      value={member.fullName}
-                      onChange={(e) => handleMemberChange(index, 'fullName', e.target.value)}
-                    />
-                    <input 
-                      type="email" 
-                      placeholder="Email" 
-                      value={member.email}
-                      onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
-                    />
-                    <input 
-                      type="tel" 
-                      placeholder="Phone" 
-                      value={member.phone}
-                      onChange={(e) => handleMemberChange(index, 'phone', e.target.value)}
-                    />
+                  <div className="member-inputs-grid">
+                    {/* Full Name (Full Width) */}
+                    <div className="input-full-width">
+                      <input 
+                        placeholder="Full Name" 
+                        value={member.fullName}
+                        onChange={(e) => handleMemberChange(index, 'fullName', e.target.value)}
+                      />
+                    </div>
+
+                    {/* ACADEMIC INFO (Row 2) */}
+                    <select 
+                      value={member.branch}
+                      onChange={(e) => handleMemberChange(index, 'branch', e.target.value)}
+                    >
+                      {BRANCHES.map(b => <option key={b} value={b}>{b}</option>)}
+                    </select>
+
+                    <select 
+                      value={member.year}
+                      onChange={(e) => handleMemberChange(index, 'year', e.target.value)}
+                    >
+                      {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
+                    </select>
+
+                    {/* CONTACT INFO (Leader Only) */}
+                    {index === 0 && (
+                      <>
+                        <input 
+                          type="email" 
+                          placeholder="Leader Email" 
+                          value={member.email}
+                          onChange={(e) => handleMemberChange(index, 'email', e.target.value)}
+                        />
+                        <input 
+                          type="tel" 
+                          placeholder="Leader Phone" 
+                          value={member.phone}
+                          onChange={(e) => handleMemberChange(index, 'phone', e.target.value)}
+                        />
+                      </>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Add Member Button (Max 4) */}
             {members.length < 4 && (
               <button className="add-member-btn" onClick={addMember}>
                 <Plus size={18} /> Add Team Member
