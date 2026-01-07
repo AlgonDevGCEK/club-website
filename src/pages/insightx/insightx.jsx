@@ -109,7 +109,7 @@ const InsightXLanding = () => {
     <div className="insightx-landing">
       {/* HERO */}
       <div className="hero-section">
-        <div className="container">
+        <div className="insightx-container">
           <div className="hero-centered-content">
             <h1 className="main-title">Insight<span className="title-accent">X</span></h1>
             <p className="subtitle">The 6-Week Innovation Marathon</p>
