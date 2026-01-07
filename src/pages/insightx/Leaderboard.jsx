@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "../../supabaseClient"; 
 import { Trophy, Medal, ArrowLeft, Search, Loader2 } from "lucide-react";
 import { NavLink } from "react-router-dom";
-import "./insightx.css"; 
+import "./Leaderboard.css"; 
 
 const Leaderboard = () => {
   const [teams, setTeams] = useState([]);
