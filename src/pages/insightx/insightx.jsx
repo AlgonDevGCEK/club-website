@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Code, Database, Zap, Trophy, Clock, ArrowRight, 
-  Lock, ExternalLink, X, Shield, Cloud, Link as LinkIcon, FileText, BarChart2 
+  Lock, ExternalLink, X, Shield, Cloud, Link as LinkIcon, BarChart2 
 } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
-import './insightx.css';
+import './insightx.css'; 
 import { NavLink } from 'react-router-dom';
 
 const iconMap = { 'Database': Database, 'Zap': Zap, 'Code': Code, 'Shield': Shield };
 
 const InsightXLanding = () => {
-  // --- STATE ---
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [eventDate, setEventDate] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [domains, setDomains] = useState([]);
   
-  // Modal & Submission State
+  // Modal State
   const [selectedDomain, setSelectedDomain] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ teamName: '', projectLink: '' });
   const [status, setStatus] = useState({ loading: false, msg: '', type: '' });
 
-  // --- 1. FETCH PUBLIC DATA ---
+  // 1. Fetch Data
   useEffect(() => {
     const init = async () => {
       try {
@@ -40,7 +39,7 @@ const InsightXLanding = () => {
     init();
   }, []);
 
-  // --- 2. TIMER ---
+  // 2. Timer
   useEffect(() => {
     if (!eventDate) return;
     const interval = setInterval(() => {
@@ -61,7 +60,7 @@ const InsightXLanding = () => {
     return () => clearInterval(interval);
   }, [eventDate]);
 
-  // --- 3. SUBMISSION HANDLER ---
+  // 3. Submission Logic
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.teamName.trim() || !form.projectLink.trim()) return;
@@ -108,11 +107,10 @@ const InsightXLanding = () => {
 
   return (
     <div className="insightx-landing">
-      {/* --- HERO --- */}
+      {/* HERO */}
       <div className="hero-section">
         <div className="container">
           <div className="hero-centered-content">
-            <div className="badge"><span>ADC GCEK Presents</span></div>
             <h1 className="main-title">Insight<span className="title-accent">X</span></h1>
             <p className="subtitle">The 6-Week Innovation Marathon</p>
             <p className="description">
@@ -124,7 +122,6 @@ const InsightXLanding = () => {
               <button className="cta-button">Register Your Team <ArrowRight className="button-icon" /></button>
             </NavLink>
 
-            {/* Countdown */}
             <div className="countdown-wrapper">
                <p className="countdown-label">Challenge Starts In</p>
                {isLoading && !eventDate ? <div className="text-gray-400">Loading...</div> : (
@@ -142,7 +139,7 @@ const InsightXLanding = () => {
         </div>
       </div>
 
-      {/* --- DOMAINS GRID --- */}
+      {/* DOMAINS */}
       <div className="about-section">
         <div className="container">
           <h2 className="section-title">The Battleground</h2>
@@ -168,12 +165,12 @@ const InsightXLanding = () => {
             ))}
           </div>
 
-          {/* --- ROADMAP --- */}
+          {/* ROADMAP */}
            <div className="how-it-works">
             <h2 className="section-title">The Roadmap</h2>
             <div className="flowchart-container">
               {[
-                { step: "1", title: "Register Team", desc: "Lock your unique Team Name" },
+                { step: "1", title: "Register", desc: "Lock your unique Team Name" },
                 { step: "2", title: "Choose Domain", desc: "Select active challenge" },
                 { step: "3", title: "Build", desc: "Access Drive & Resources" },
                 { step: "4", title: "Submit", desc: "Verify Team & Upload" },
@@ -189,7 +186,7 @@ const InsightXLanding = () => {
             </div>
           </div>
 
-          {/* --- NEW LEADERBOARD SECTION --- */}
+          {/* LEADERBOARD BANNER */}
           <div className="leaderboard-section">
             <div className="leaderboard-banner glass-card">
               <div className="lb-content">
@@ -209,7 +206,7 @@ const InsightXLanding = () => {
         </div>
       </div>
 
-      {/* --- SUBMISSION MODAL --- */}
+      {/* MODAL */}
       {isModalOpen && selectedDomain && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content glass-card" onClick={e => e.stopPropagation()}>
@@ -222,12 +219,10 @@ const InsightXLanding = () => {
             </div>
 
             <div className="modal-body">
-              {/* Objective */}
               <div className="objective-text">
                 <p><strong>🎯 Objective:</strong> {selectedDomain.full_desc || "Details coming soon..."}</p>
               </div>
 
-              {/* 📂 RESOURCE DRIVE LINK (NEW) */}
               {selectedDomain.resources_link && (
                 <a href={selectedDomain.resources_link} target="_blank" rel="noopener noreferrer" className="resource-link-btn">
                   <ExternalLink size={20} />
@@ -242,15 +237,12 @@ const InsightXLanding = () => {
 
               <hr className="divider"/>
 
-              {/* --- SECURE SUBMISSION FORM --- */}
               <div className="submission-section">
                 <h3>Submit Solution</h3>
-                
                 {selectedDomain.status === 'closed' ? (
                   <div className="warning-box">⛔ Submissions Closed</div>
                 ) : (
                   <form onSubmit={handleSubmit}>
-                    
                     <div className="form-group">
                       <label className="input-label">Team Name (Must match Registration)</label>
                       <input 
@@ -275,11 +267,7 @@ const InsightXLanding = () => {
                       />
                     </div>
 
-                    {status.msg && (
-                      <div className={`status-msg ${status.type}`}>
-                        {status.msg}
-                      </div>
-                    )}
+                    {status.msg && <div className={`status-msg ${status.type}`}>{status.msg}</div>}
 
                     <button type="submit" className="submit-btn" disabled={status.loading}>
                       {status.loading ? 'Verifying...' : 'Verify & Submit'}
