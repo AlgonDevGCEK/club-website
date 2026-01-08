@@ -143,7 +143,7 @@ const Signup = () => {
   }, [formData, errors, strengthScore]);
 
   const upiUrl = useMemo(() => {
-    return `upi://pay?pa=amalnk286@oksbi&pn=ALGON_DC_GCEK&am=${formData.amountToPay}&cu=INR&tn=${formData.durationLabel}`;
+    return `upi://pay?pa=anciaalusb@oksbi&pn=ALGON_DC_GCEK&am=${formData.amountToPay}&cu=INR&tn=${formData.durationLabel}`;
   }, [formData.amountToPay, formData.durationLabel]);
 
   // --- 4. Submit Handlers ---
