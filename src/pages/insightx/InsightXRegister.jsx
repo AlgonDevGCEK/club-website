@@ -35,7 +35,7 @@ const InsightXRegister = () => {
   };
 
   const addMember = () => {
-    if (members.length < 4) {
+    if (members.length < 5) {
       setMembers([
         ...members, 
         // New members don't need email/phone, just academic info
@@ -292,7 +292,7 @@ const InsightXRegister = () => {
               ))}
             </div>
 
-            {members.length < 4 && (
+            {members.length < 5 && (
               <button className="add-member-btn" onClick={addMember}>
                 <Plus size={18} /> Add Team Member
               </button>
