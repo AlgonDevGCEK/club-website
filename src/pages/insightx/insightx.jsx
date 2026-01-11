@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar, Code, Database, Zap, Trophy, Clock, ArrowRight, 
-  Lock, ExternalLink, X, Shield, Cloud, Link as LinkIcon, BarChart2 
+  Lock, ExternalLink, X, Shield, Cloud, Link as LinkIcon, BarChart2 ,GitBranch
 } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
 import './insightx.css'; 
 import { NavLink } from 'react-router-dom';
 
-const iconMap = { 'Database': Database, 'Zap': Zap, 'Code': Code, 'Shield': Shield };
+const iconMap = { 'Database': Database, 'Zap': Zap, 'Code': Code, 'Shield': Shield, 'Cloud': Cloud, 'GitBranch': GitBranch };
 
 const InsightXLanding = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -123,7 +123,7 @@ const InsightXLanding = () => {
             </NavLink>
 
             <div className="countdown-wrapper">
-               <p className="countdown-label">Challenge Starts In</p>
+               <p className="countdown-label">The Next Challenge Starts In</p>
                {isLoading && !eventDate ? <div className="text-gray-400">Loading...</div> : (
                  <div className="countdown-grid">
                    {Object.entries(timeLeft).map(([unit, val]) => (
